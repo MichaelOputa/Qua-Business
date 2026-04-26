@@ -57,7 +57,7 @@ export default function Hero() {
           {[
             { number: '500+', label: 'Clients Served' },
             { number: '98%', label: 'Satisfaction Rate' },
-            { number: '5+', label: 'Years Experience' },
+            { number: '1', label: 'Year Experience' },
           ].map((stat) => (
             <div key={stat.label} className="text-center">
               <div className="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-blue-800 to-blue-500 bg-clip-text text-transparent">
