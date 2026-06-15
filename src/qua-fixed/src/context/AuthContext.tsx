@@ -5,21 +5,21 @@ import { User } from '@supabase/supabase-js';
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  token: string | null;
   signUp: (email: string, password: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   sendVerificationCode: (email: string) => Promise<void>;
   verifyCode: (email: string, code: string) => Promise<void>;
   userProfile: any | null;
+  refreshProfile: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// In-memory store for OTP codes (replace with Redis/DB in production)
-const otpStore = new Map<string, { code: string; expires: number }>();
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(null);
   const [userProfile, setUserProfile] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -32,11 +32,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const refreshProfile = async () => {
+    if (user) await loadProfile(user.id);
+  };
+
   useEffect(() => {
     const getSession = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
         setUser(session?.user ?? null);
+        setToken(session?.access_token ?? null);
         if (session?.user) await loadProfile(session.user.id);
       } catch (error) {
         console.error('Error getting session:', error);
@@ -49,6 +54,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const { data: authListener } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setUser(session?.user ?? null);
+      setToken(session?.access_token ?? null);
       if (session?.user) {
         await loadProfile(session.user.id);
       } else {
@@ -56,9 +62,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     });
 
-    return () => {
-      authListener?.subscription?.unsubscribe();
-    };
+    return () => { authListener?.subscription?.unsubscribe(); };
   }, []);
 
   const signUp = async (email: string, password: string) => {
@@ -73,10 +77,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         });
-      } catch (profileError: any) {
-        // Profile may already exist (e.g. duplicate signup attempt) — not fatal
-        if (profileError?.code !== '23505') {
-          console.error('Error creating user profile:', profileError);
+      } catch (err: any) {
+        // 23505 = unique violation (profile already exists) — safe to ignore
+        if (err?.code !== '23505') {
+          console.error('Error creating user profile:', err);
         }
       }
     }
@@ -91,57 +95,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
     setUserProfile(null);
+    setToken(null);
   };
 
   /**
-   * Sends a 6-digit OTP to the given email using Supabase's built-in OTP.
-   * Falls back to a client-side generated code logged to console in development.
+   * Send a 6-digit OTP to the user's email via Supabase magic-link / OTP flow.
    */
   const sendVerificationCode = async (email: string) => {
-    // Use Supabase magic link / OTP flow
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: { shouldCreateUser: true },
     });
-
     if (error) throw new Error(error.message);
-
-    // Also keep a local fallback code for dev/testing if needed
-    if (import.meta.env.DEV) {
-      const devCode = Math.floor(100000 + Math.random() * 900000).toString();
-      otpStore.set(email, { code: devCode, expires: Date.now() + 10 * 60 * 1000 });
-      console.info(`[DEV] OTP for ${email}: ${devCode}`);
-    }
   };
 
   /**
-   * Verifies the OTP token sent by Supabase to the user's email.
+   * Verify the OTP token that Supabase emailed to the user.
    */
   const verifyCode = async (email: string, code: string) => {
-    // Try Supabase token verification first
     const { error } = await supabase.auth.verifyOtp({
       email,
       token: code,
       type: 'email',
     });
-
-    if (!error) return;
-
-    // In development, also accept the local fallback code
-    if (import.meta.env.DEV) {
-      const stored = otpStore.get(email);
-      if (stored && stored.code === code && stored.expires > Date.now()) {
-        otpStore.delete(email);
-        return;
-      }
-    }
-
-    throw new Error('Invalid or expired verification code');
+    if (error) throw new Error('Invalid or expired verification code');
   };
 
   return (
     <AuthContext.Provider
-      value={{ user, loading, signUp, signIn, signOut, sendVerificationCode, verifyCode, userProfile }}
+      value={{ user, loading, token, signUp, signIn, signOut, sendVerificationCode, verifyCode, userProfile, refreshProfile }}
     >
       {children}
     </AuthContext.Provider>
@@ -150,8 +132,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within AuthProvider');
-  }
+  if (!context) throw new Error('useAuth must be used within AuthProvider');
   return context;
 }
