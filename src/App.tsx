@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Services from './components/Services';
 import About from './components/About';
+import Portfolio from './components/Portfolio';
 import WhyUs from './components/WhyUs';
 import Pricing from './components/Pricing';
 import Contact from './components/Contact';
@@ -18,6 +19,7 @@ function HomePage() {
       <Hero />
       <Services />
       <About />
+      <Portfolio />
       <WhyUs />
       <Pricing />
       <Contact />
