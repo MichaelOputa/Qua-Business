@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Services from './components/Services';
@@ -13,6 +14,20 @@ import ProfilePage from './components/ProfilePage';
 import { AuthProvider } from './context/AuthContext';
 
 function HomePage() {
+  const location = useLocation();
+
+  useEffect(() => {
+    const section = location.state?.section as string | undefined;
+    const targetId = section && section !== 'home' ? section : 'home';
+    const target = document.getElementById(targetId);
+
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [location.state]);
+
   return (
     <>
       <Navbar />

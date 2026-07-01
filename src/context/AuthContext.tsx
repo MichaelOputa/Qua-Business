@@ -1,43 +1,38 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import type { User } from '@supabase/supabase-js';
 import { supabase, db } from '../lib/supabase';
-import { User } from '@supabase/supabase-js';
-
-interface AuthContextType {
-  user: User | null;
-  loading: boolean;
-  signUp: (email: string, password: string) => Promise<void>;
-  signIn: (email: string, password: string) => Promise<void>;
-  signOut: () => Promise<void>;
-  sendVerificationCode: (email: string) => Promise<void>;
-  verifyCode: (email: string, code: string) => Promise<void>;
-  userProfile: any | null;
-}
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+import { AuthContext, type AuthContextType, type UserProfile } from './auth';
 
 // In-memory store for OTP codes (replace with Redis/DB in production)
 const otpStore = new Map<string, { code: string; expires: number }>();
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [userProfile, setUserProfile] = useState<any | null>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
   const loadProfile = async (userId: string) => {
     try {
       const profile = await db.getUserProfile(userId);
-      setUserProfile(profile);
+      setUserProfile(profile as UserProfile);
     } catch (error) {
       console.error('Error loading user profile:', error);
+      setUserProfile(null);
     }
   };
 
   useEffect(() => {
     const getSession = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
         setUser(session?.user ?? null);
-        if (session?.user) await loadProfile(session.user.id);
+        if (session?.user) {
+          await loadProfile(session.user.id);
+        } else {
+          setUserProfile(null);
+        }
       } catch (error) {
         console.error('Error getting session:', error);
       } finally {
@@ -45,7 +40,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     };
 
-    getSession();
+    void getSession();
 
     const { data: authListener } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setUser(session?.user ?? null);
@@ -54,6 +49,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } else {
         setUserProfile(null);
       }
+      setLoading(false);
     });
 
     return () => {
@@ -73,9 +69,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         });
-      } catch (profileError: any) {
-        // Profile may already exist (e.g. duplicate signup attempt) — not fatal
-        if (profileError?.code !== '23505') {
+      } catch (profileError: unknown) {
+        const code = (profileError as { code?: string } | null)?.code;
+        if (code !== '23505') {
           console.error('Error creating user profile:', profileError);
         }
       }
@@ -90,15 +86,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
+    setUser(null);
     setUserProfile(null);
   };
 
-  /**
-   * Sends a 6-digit OTP to the given email using Supabase's built-in OTP.
-   * Falls back to a client-side generated code logged to console in development.
-   */
   const sendVerificationCode = async (email: string) => {
-    // Use Supabase magic link / OTP flow
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: { shouldCreateUser: true },
@@ -106,7 +98,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     if (error) throw new Error(error.message);
 
-    // Also keep a local fallback code for dev/testing if needed
     if (import.meta.env.DEV) {
       const devCode = Math.floor(100000 + Math.random() * 900000).toString();
       otpStore.set(email, { code: devCode, expires: Date.now() + 10 * 60 * 1000 });
@@ -114,11 +105,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  /**
-   * Verifies the OTP token sent by Supabase to the user's email.
-   */
   const verifyCode = async (email: string, code: string) => {
-    // Try Supabase token verification first
     const { error } = await supabase.auth.verifyOtp({
       email,
       token: code,
@@ -127,7 +114,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     if (!error) return;
 
-    // In development, also accept the local fallback code
     if (import.meta.env.DEV) {
       const stored = otpStore.get(email);
       if (stored && stored.code === code && stored.expires > Date.now()) {
@@ -139,13 +125,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     throw new Error('Invalid or expired verification code');
   };
 
-  return (
-    <AuthContext.Provider
-      value={{ user, loading, signUp, signIn, signOut, sendVerificationCode, verifyCode, userProfile }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+  const value: AuthContextType = {
+    user,
+    loading,
+    signUp,
+    signIn,
+    signOut,
+    sendVerificationCode,
+    verifyCode,
+    userProfile,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

@@ -232,7 +232,11 @@ function ServiceBlock({
   categoryIndex,
   serviceIndex,
 }: {
-  service: (typeof pricingCategories[0]['services'])[0];
+  service: {
+    name: string;
+    items: Array<{ label: string; price: string; highlight?: boolean; note?: string }>;
+    note?: string;
+  };
   categoryIndex: number;
   serviceIndex: number;
 }) {
@@ -284,7 +288,7 @@ function ServiceBlock({
           {service.items.map((item, i) => (
             <ServiceItem key={item.label} item={item} index={i} />
           ))}
-          {service.note && !service.items[0].note && (
+          {service.note && !service.items.some((item) => 'note' in item && item.note) && (
             <div className="text-xs text-gray-500 italic mt-3 pt-3 border-t border-gray-200">
               💡 {service.note}
             </div>

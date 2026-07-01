@@ -41,10 +41,10 @@ export const getPool = (): Pool => {
 /**
  * Execute a query on the database
  */
-export const query = async <T = any>(
+export const query = async <T extends Record<string, unknown> = Record<string, unknown>>(
   text: string,
   params?: any[]
-): Promise<any> => {
+): Promise<{ rows: T[]; rowCount: number | null; }> => {
   const pool = getPool();
   try {
     return await pool.query<T>(text, params);
@@ -160,7 +160,8 @@ export const db = {
    */
   async getUserCount() {
     const result = await query('SELECT COUNT(*) FROM user_profiles');
-    return parseInt(result.rows[0].count, 10);
+    const count = result.rows[0]?.count;
+    return typeof count === 'string' ? parseInt(count, 10) : 0;
   },
 
   /**
