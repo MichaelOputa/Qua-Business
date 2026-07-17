@@ -1,82 +1,167 @@
-import { ArrowRight, ChevronDown } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { ArrowRight, ChevronDown, Sparkles } from 'lucide-react';
+import { waLink, WA_MESSAGES } from '../lib/whatsapp';
 
 export default function Hero() {
+  const [mounted, setMounted] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+    const onScroll = () => setScrolled(window.scrollY > 80);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const scrollToServices = () => {
+    document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <section
       id="home"
-      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-white"
+      ref={ref}
+      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
     >
-      {/* Background gradient shapes */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-[600px] h-[600px] bg-blue-50 rounded-full opacity-60 blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-[500px] h-[500px] bg-blue-100 rounded-full opacity-50 blur-3xl" />
+      {/* Background image */}
+      <div className="absolute inset-0">
+        <img
+          src="/qua_people.jpeg"
+          alt="Digital business growth"
+          className={`h-full w-full object-cover transition-transform duration-[2000ms] ease-out ${
+            mounted ? 'scale-100' : 'scale-110'
+          } ${scrolled ? 'scale-105' : ''}`}
+        />
+        {/* Dark overlay for premium contrast */}
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-950/90 via-slate-900/80 to-blue-950/85" />
+        {/* Accent glows */}
+        <div className="absolute -top-40 -right-32 w-[600px] h-[600px] bg-blue-500/20 rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 -left-32 w-[500px] h-[500px] bg-cyan-400/15 rounded-full blur-3xl" />
+        {/* Subtle grid */}
+        <div
+          className="absolute inset-0 opacity-[0.07]"
+          style={{
+            backgroundImage:
+              'linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)',
+            backgroundSize: '64px 64px',
+          }}
+        />
       </div>
 
-      <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-4xl mx-auto">
+      {/* Content */}
+      <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-5xl mx-auto pt-24 pb-16">
+        {/* Badge */}
+        <div
+          className={`inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 backdrop-blur-md px-4 py-1.5 mb-8 transition-all duration-700 ${
+            mounted ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
+          }`}
+        >
+          <Sparkles size={14} className="text-cyan-300" />
+          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-blue-100">
+            Digital Growth Studio
+          </span>
+        </div>
+
         {/* Logo */}
-        <div className="animate-fade-in mb-8">
-          <img
-            src="/Qua_Business.jpeg"
-            alt="QUA Business"
-            className="w-64 md:w-80 mx-auto object-contain drop-shadow-xl"
-          />
+        <div
+          className={`mb-8 transition-all duration-700 delay-75 ${
+            mounted ? 'opacity-100 scale-100' : 'opacity-0 scale-90'
+          }`}
+        >
+          <div className="relative">
+            <div className="absolute inset-0 bg-blue-500/30 blur-2xl rounded-full" />
+            <img
+              src="/Qua_Business.jpeg"
+              alt="QUA Business"
+              className="relative w-28 h-28 md:w-32 md:h-32 mx-auto object-cover rounded-2xl shadow-2xl ring-1 ring-white/20"
+            />
+          </div>
         </div>
 
         {/* Headline */}
-        <h1 className="animate-slide-up text-4xl md:text-6xl lg:text-7xl font-extrabold text-gray-900 leading-tight mb-6">
+        <h1
+          className={`text-4xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.05] mb-6 tracking-tight transition-all duration-700 delay-150 ${
+            mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`}
+        >
           Turning Business Into{' '}
-          <span className="bg-gradient-to-r from-blue-800 to-blue-500 bg-clip-text text-transparent">
-            Real Hustle
+          <span className="relative inline-block">
+            <span className="bg-gradient-to-r from-cyan-300 via-blue-400 to-blue-300 bg-clip-text text-transparent">
+              Real Hustle
+            </span>
+            <span className="absolute -bottom-1 left-0 right-0 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full" />
           </span>
         </h1>
 
         {/* Subheadline */}
-        <p className="animate-slide-up animation-delay-200 text-lg md:text-xl text-gray-500 max-w-2xl mb-10 leading-relaxed">
-          Helping businesses grow, scale, and dominate online — from digital presence to sales strategy, we've got you covered.
+        <p
+          className={`text-lg md:text-xl text-blue-100/90 max-w-2xl mb-10 leading-relaxed transition-all duration-700 delay-250 ${
+            mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+          }`}
+        >
+          We help brands grow, scale, and dominate online — from stunning websites
+          and bold branding to results-driven digital marketing.
         </p>
 
-        {/* CTA Buttons */}
-        <div className="animate-slide-up animation-delay-400 flex flex-col sm:flex-row gap-4">
+        {/* CTAs */}
+        <div
+          className={`flex flex-col sm:flex-row gap-4 transition-all duration-700 delay-350 ${
+            mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+          }`}
+        >
           <a
-            href="#contact"
-            className="group flex items-center justify-center gap-2 bg-gradient-to-r from-blue-800 to-blue-500 text-white font-semibold px-8 py-4 rounded-full shadow-lg hover:shadow-blue-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
+            href={waLink(WA_MESSAGES.buildWebsite)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 font-bold px-8 py-4 rounded-full shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-cyan-400/40 transition-all duration-300 hover:-translate-y-0.5"
           >
-            Get Started
-            <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform duration-200" />
+            Build Your Website
+            <ArrowRight
+              size={18}
+              className="group-hover:translate-x-1 transition-transform duration-200"
+            />
           </a>
-          <a
-            href="#services"
-            className="flex items-center justify-center gap-2 border-2 border-blue-600 text-blue-700 font-semibold px-8 py-4 rounded-full hover:bg-blue-50 transition-all duration-300 hover:-translate-y-0.5"
+          <button
+            onClick={scrollToServices}
+            className="flex items-center justify-center gap-2 border-2 border-white/30 text-white font-semibold px-8 py-4 rounded-full hover:bg-white/10 hover:border-white/50 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5"
           >
-            Our Services
-          </a>
+            Explore Services
+          </button>
         </div>
 
-        {/* Stats strip */}
-        <div className="animate-slide-up animation-delay-600 mt-16 grid grid-cols-3 gap-8 md:gap-16">
+        {/* Stats */}
+        <div
+          className={`mt-16 grid grid-cols-3 gap-6 md:gap-16 transition-all duration-700 delay-500 ${
+            mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+          }`}
+        >
           {[
-            { number: '500+', label: 'Clients Served' },
-            { number: '98%', label: 'Satisfaction Rate' },
-            { number: '1', label: 'Year Experience' },
+            { number: '500+', label: 'Projects Delivered' },
+            { number: '98%', label: 'Client Satisfaction' },
+            { number: '16+', label: 'Service Offerings' },
           ].map((stat) => (
             <div key={stat.label} className="text-center">
-              <div className="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-blue-800 to-blue-500 bg-clip-text text-transparent">
+              <div className="text-3xl md:text-5xl font-extrabold bg-gradient-to-b from-white to-blue-200 bg-clip-text text-transparent">
                 {stat.number}
               </div>
-              <div className="text-sm text-gray-500 mt-1">{stat.label}</div>
+              <div className="text-xs md:text-sm text-blue-200/80 mt-1 uppercase tracking-wider">
+                {stat.label}
+              </div>
             </div>
           ))}
         </div>
       </div>
 
       {/* Scroll indicator */}
-      <a
-        href="#services"
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-gray-400 hover:text-blue-500 transition-colors animate-bounce"
+      <button
+        onClick={scrollToServices}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-blue-200/70 hover:text-white transition-colors animate-bounce"
+        aria-label="Scroll to services"
       >
-        <span className="text-xs tracking-widest uppercase">Scroll</span>
+        <span className="text-[10px] tracking-[0.3em] uppercase">Scroll</span>
         <ChevronDown size={20} />
-      </a>
+      </button>
     </section>
   );
 }

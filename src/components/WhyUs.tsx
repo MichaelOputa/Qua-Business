@@ -1,9 +1,10 @@
 import { useEffect, useRef } from 'react';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
+import { waLink, WA_MESSAGES } from '../lib/whatsapp';
 
 const reasons = [
   { title: 'Results-Driven', desc: 'Every action we take is tied to measurable outcomes that grow your bottom line.' },
-  { title: 'Affordable Pricing', desc: 'Premium quality services at prices that make sense for growing businesses.' },
+  { title: 'Affordable Pricing', desc: 'Premium quality services at subscription prices that make sense for growing businesses.' },
   { title: 'Growth-Focused', desc: 'We think beyond the task at hand — always keeping your long-term scale in mind.' },
   { title: 'One-Stop Solution', desc: 'No need to juggle multiple agencies. We handle everything digital under one roof.' },
   { title: 'Transparent Reporting', desc: 'Clear, honest monthly reports so you always know exactly where your investment goes.' },
@@ -33,13 +34,13 @@ function Card({ title, desc, index }: { title: string; desc: string; index: numb
   return (
     <div
       ref={ref}
-      className="opacity-0 translate-y-6 transition-all duration-500 flex gap-4 p-6 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 hover:border-blue-100"
+      className="opacity-0 translate-y-6 transition-all duration-500 flex gap-4 p-6 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-lg hover:-translate-y-1 hover:border-blue-200"
       style={{ transitionDelay: `${index * 80}ms` }}
     >
-      <CheckCircle size={22} className="text-blue-600 flex-shrink-0 mt-0.5" />
+      <CheckCircle2 size={24} className="text-blue-600 flex-shrink-0 mt-0.5" />
       <div>
-        <div className="font-bold text-gray-900 mb-1">{title}</div>
-        <div className="text-sm text-gray-500 leading-relaxed">{desc}</div>
+        <div className="font-bold text-slate-900 mb-1">{title}</div>
+        <div className="text-sm text-slate-500 leading-relaxed">{desc}</div>
       </div>
     </div>
   );
@@ -47,19 +48,21 @@ function Card({ title, desc, index }: { title: string; desc: string; index: numb
 
 export default function WhyUs() {
   return (
-    <section id="why-us" className="py-24 bg-gray-50">
+    <section id="why-us" className="py-24 md:py-32 bg-gradient-to-b from-slate-50 to-white">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
-          <span className="inline-block text-blue-600 font-semibold text-sm uppercase tracking-widest mb-3">
+          <span className="inline-flex items-center gap-2 text-blue-600 font-semibold text-sm uppercase tracking-[0.25em] mb-4">
+            <span className="w-8 h-px bg-blue-400" />
             Why QUA Business
+            <span className="w-8 h-px bg-blue-400" />
           </span>
-          <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 mb-5 tracking-tight">
             The Smart Choice for{' '}
-            <span className="bg-gradient-to-r from-blue-800 to-blue-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-700 via-blue-500 to-cyan-500 bg-clip-text text-transparent">
               Growing Brands
             </span>
           </h2>
-          <p className="text-gray-500 text-lg max-w-2xl mx-auto">
+          <p className="text-slate-500 text-lg max-w-2xl mx-auto">
             We're not just a service provider — we're your growth partner.
           </p>
         </div>
@@ -71,16 +74,16 @@ export default function WhyUs() {
         </div>
 
         {/* CTA band */}
-        <div className="mt-16 bg-gradient-to-r from-blue-800 to-blue-500 rounded-3xl p-10 md:p-14 text-center text-white shadow-xl">
-          <h3 className="text-3xl md:text-4xl font-extrabold mb-4">
-            Ready to Dominate Online?
-          </h3>
+        <div className="mt-16 bg-gradient-to-r from-blue-700 to-cyan-500 rounded-3xl p-10 md:p-14 text-center text-white shadow-xl">
+          <h3 className="text-3xl md:text-4xl font-extrabold mb-4">Ready to Dominate Online?</h3>
           <p className="text-blue-100 text-lg mb-8 max-w-xl mx-auto">
             Let's build something extraordinary together. Your growth story starts here.
           </p>
           <a
-            href="#contact"
-            className="inline-block bg-white text-blue-700 font-bold px-10 py-4 rounded-full hover:bg-blue-50 transition-colors duration-200 shadow-lg"
+            href={waLink(WA_MESSAGES.buildWebsite)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block bg-white text-blue-700 font-bold px-10 py-4 rounded-full hover:bg-cyan-50 transition-colors shadow-lg"
           >
             Start Your Journey
           </a>

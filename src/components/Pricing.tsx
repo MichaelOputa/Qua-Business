@@ -1,313 +1,132 @@
-import { useEffect, useRef } from 'react';
-import { ChevronDown } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { Check, Zap, Crown, Rocket, Video, Palette, Sparkles } from 'lucide-react';
+import { waLink, WA_MESSAGES } from '../lib/whatsapp';
 
-const pricingCategories = [
+const subscriptionPlans = [
   {
-    category: 'Website Services',
-    icon: '🌐',
-    description: 'Core Revenue Driver',
-    services: [
-      {
-        name: 'Full Website Development',
-        items: [
-          { label: 'Basic Website (1–5 pages)', price: '₦150,000' },
-          { label: 'Standard Business Website (5–10 pages)', price: '₦250,000' },
-          {
-            label: 'Premium Website (Advanced/eCommerce)',
-            price: '₦350,000 – ₦500,000',
-          },
-        ],
-        note: 'Payment Plan: 70% upfront, 30% on completion',
-      },
-      {
-        name: 'Website Setup (Subsidized Entry)',
-        items: [
-          { label: 'Domain + Hosting + Basic Setup', price: '₦15,000 – ₦20,000' },
-        ],
-        note: 'Lead magnet offer',
-      },
-      {
-        name: 'Monthly Website Subscription',
-        items: [
-          {
-            label: 'Maintenance + Updates + Monitoring',
-            price: '₦5,700/month',
-          },
-          {
-            label: 'Advanced Care Plan',
-            price: '₦15,000/month',
-            highlight: true,
-          },
-        ],
-        note: 'Advanced includes edits, speed optimization, backups',
-      },
+    name: 'Starter',
+    icon: Zap,
+    price: '₦25,000',
+    period: '/month',
+    description: 'Perfect for small businesses getting online.',
+    features: [
+      '1 Service (Social Media OR Content)',
+      'Basic Content Creation (4 posts/month)',
+      'Social Media Setup & Optimization',
+      'Monthly Performance Report',
+      'WhatsApp Support',
+    ],
+    highlight: false,
+    cta: WA_MESSAGES.pricing,
+  },
+  {
+    name: 'Growth',
+    icon: Rocket,
+    price: '₦75,000',
+    period: '/month',
+    description: 'For brands ready to scale their digital presence.',
+    features: [
+      'Up to 2 Services Combined',
+      'Social Media Management (12 posts/month)',
+      'Content Creation (photos + short video)',
+      'Basic SEO Optimization',
+      'Monthly Strategy Call',
+      'Priority WhatsApp Support',
+    ],
+    highlight: true,
+    cta: WA_MESSAGES.pricing,
+  },
+  {
+    name: 'Premium',
+    icon: Crown,
+    price: '₦150,000+',
+    period: '/month',
+    description: 'Full-stack digital growth on autopilot.',
+    features: [
+      'Up to 4 Services Combined',
+      'Daily Social Media Management',
+      'Advanced Content Creation',
+      'SEO + Digital Marketing + Ads',
+      'Bi-weekly Strategy Calls',
+      'Dedicated Account Manager',
+    ],
+    highlight: false,
+    cta: WA_MESSAGES.pricing,
+  },
+];
+
+const brandingSubscription = {
+  name: 'Weekly Flyer Subscription',
+  icon: Palette,
+  price: '₦50,000',
+  period: '/month',
+  description: 'Consistent, professional flyer designs every single week.',
+  features: [
+    '4 Flyer Designs per month (1/week)',
+    'Social media-ready dimensions',
+    '2 revisions per design',
+    'Brand-consistent templates',
+    '48-hour turnaround per design',
+    'Source files included',
+  ],
+};
+
+const videoPackages = [
+  {
+    name: 'Essential Video',
+    price: '₦300,000',
+    description: 'Single high-quality promotional video.',
+    features: [
+      '1 Promotional Video (up to 60 sec)',
+      'Professional Editing & Color Grading',
+      'Background Music & Voiceover',
+      '1 Round of Revisions',
+      '1080p HD Delivery',
+      '5-Day Turnaround',
     ],
   },
   {
-    category: 'Growth & Visibility Services',
-    icon: '📈',
-    description: '',
-    services: [
-      {
-        name: 'Online Visibility Setup',
-        items: [{ label: 'One-time setup', price: '₦25,000 – ₦50,000' }],
-      },
-      {
-        name: 'Traffic Generation (Basic SEO)',
-        items: [{ label: 'Monthly', price: '₦20,000 – ₦40,000' }],
-      },
+    name: 'Professional Video',
+    price: '₦600,000',
+    description: 'Multi-video package for a full campaign.',
+    features: [
+      '3 Promotional Videos (60–90 sec each)',
+      'Professional Editing & Color Grading',
+      'Motion Graphics & Subtitles',
+      '2 Rounds of Revisions per Video',
+      '4K UHD Delivery',
+      '10-Day Turnaround',
+      'Social Media Cut Versions',
     ],
+    highlight: true,
   },
   {
-    category: 'WhatsApp Business Solutions',
-    icon: '💬',
-    description: '',
-    services: [
-      {
-        name: 'WhatsApp Business Setup',
-        items: [{ label: 'One-time', price: '₦10,000 – ₦20,000' }],
-      },
-      {
-        name: 'WhatsApp Sales Optimization',
-        items: [
-          { label: 'One-time', price: '₦25,000 – ₦50,000' },
-          {
-            label: 'Optional Monthly Optimization',
-            price: '₦15,000/month',
-            highlight: true,
-          },
-        ],
-      },
-    ],
-  },
-  {
-    category: 'Social Media Services',
-    icon: '📱',
-    description: '',
-    services: [
-      {
-        name: 'Social Media Setup',
-        items: [{ label: 'One-time', price: '₦15,000 – ₦30,000' }],
-      },
-      {
-        name: 'Social Media Management',
-        items: [
-          { label: 'Basic (3 posts/week)', price: '₦40,000/month' },
-          { label: 'Standard (daily + engagement)', price: '₦70,000/month' },
-          {
-            label: 'Premium (ads + strategy + content)',
-            price: '₦120,000/month',
-            highlight: true,
-          },
-        ],
-      },
-    ],
-  },
-  {
-    category: 'Content & Branding',
-    icon: '🎨',
-    description: '',
-    services: [
-      {
-        name: 'Content Creation (Basic)',
-        items: [{ label: 'Monthly', price: '₦25,000 – ₦50,000' }],
-      },
-      {
-        name: 'Branding & Visual Design',
-        items: [{ label: 'One-time', price: '₦50,000 – ₦150,000' }],
-      },
-    ],
-  },
-  {
-    category: 'Sales & Conversion',
-    icon: '🎯',
-    description: '',
-    services: [
-      {
-        name: 'Offer & Promotion Setup',
-        items: [{ label: 'Per campaign', price: '₦20,000 – ₦50,000' }],
-      },
-      {
-        name: 'Ads Management',
-        items: [
-          { label: 'Setup Fee', price: '₦30,000 – ₦80,000' },
-          {
-            label: 'Monthly Management',
-            price: '₦30,000 – ₦100,000',
-            note: 'Excluding ad spend',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    category: 'Business Optimization & Analytics',
-    icon: '📊',
-    description: '',
-    services: [
-      {
-        name: 'Business Profile Optimization',
-        items: [{ label: 'One-time', price: '₦15,000 – ₦30,000' }],
-      },
-      {
-        name: 'Performance Tracking & Reporting',
-        items: [{ label: 'Monthly', price: '₦20,000 – ₦50,000' }],
-      },
-    ],
-  },
-  {
-    category: 'Customer Retention & Growth',
-    icon: '🤝',
-    description: '',
-    services: [
-      {
-        name: 'Customer Engagement Support',
-        items: [{ label: 'Monthly', price: '₦20,000 – ₦60,000' }],
-      },
-      {
-        name: 'Business Growth Strategy (Consulting)',
-        items: [
-          { label: 'Per session', price: '₦20,000 – ₦50,000' },
-          {
-            label: 'Monthly Advisory',
-            price: '₦100,000+',
-            highlight: true,
-          },
-        ],
-      },
+    name: 'Cinematic Video',
+    price: '₦1,000,000',
+    description: 'Premium cinematic production for flagship brands.',
+    features: [
+      '5+ Promotional Videos (up to 2 min)',
+      'Cinematic Production Crew',
+      'Advanced Motion Graphics & VFX',
+      'Unlimited Revisions',
+      '4K UHD Delivery + Raw Footage',
+      '21-Day Turnaround',
+      'Multi-Platform Cut Versions',
+      'Brand Storytelling Strategy',
     ],
   },
 ];
 
-function ServiceItem({
-  item,
-  index,
-}: {
-  item: { label: string; price: string; highlight?: boolean; note?: string };
-  index: number;
-}) {
+const contentPricing = [
+  { label: 'Basic Content (4 posts/month)', price: '₦25,000' },
+  { label: 'Standard Content (12 posts/month)', price: '₦50,000' },
+  { label: 'Premium Content (daily + video)', price: '₦100,000' },
+  { label: 'Short-Form Video (Reels/TikTok)', price: '₦40,000 – ₦80,000' },
+  { label: 'Product Photography (per session)', price: '₦30,000 – ₦60,000' },
+];
+
+function Reveal({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          el.classList.add('opacity-100', 'translate-y-0');
-          el.classList.remove('opacity-0', 'translate-y-4');
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.05 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  return (
-    <div
-      ref={ref}
-      className={`opacity-0 translate-y-4 transition-all duration-500 flex items-start justify-between gap-4 p-4 rounded-lg ${
-        item.highlight ? 'bg-blue-50 border-l-4 border-blue-600' : 'bg-gray-50'
-      }`}
-      style={{ transitionDelay: `${index * 50}ms` }}
-    >
-      <div className="flex-1 min-w-0">
-        <div className="font-medium text-gray-900 text-sm">{item.label}</div>
-        {item.note && (
-          <div className="text-xs text-gray-500 mt-1">({item.note})</div>
-        )}
-      </div>
-      <div className="font-bold text-blue-600 whitespace-nowrap flex-shrink-0">
-        {item.price}
-      </div>
-    </div>
-  );
-}
-
-function ServiceBlock({
-  service,
-  categoryIndex,
-  serviceIndex,
-}: {
-  service: {
-    name: string;
-    items: Array<{ label: string; price: string; highlight?: boolean; note?: string }>;
-    note?: string;
-  };
-  categoryIndex: number;
-  serviceIndex: number;
-}) {
-  const [expanded, setExpanded] = useState(true);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          el.classList.add('opacity-100', 'translate-y-0');
-          el.classList.remove('opacity-0', 'translate-y-6');
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.05 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  return (
-    <div
-      ref={ref}
-      className="opacity-0 translate-y-6 transition-all duration-500 border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
-      style={{
-        transitionDelay: `${(categoryIndex * 2 + serviceIndex) * 60}ms`,
-      }}
-    >
-      <button
-        onClick={() => setExpanded(!expanded)}
-        className="w-full flex items-center justify-between gap-3 p-5 bg-white hover:bg-gray-50 transition-colors"
-      >
-        <div className="flex-1 text-left">
-          <h4 className="font-bold text-gray-900">{service.name}</h4>
-        </div>
-        <ChevronDown
-          size={18}
-          className={`text-gray-400 flex-shrink-0 transition-transform ${
-            expanded ? 'rotate-180' : ''
-          }`}
-        />
-      </button>
-
-      {expanded && (
-        <div className="px-5 py-4 bg-white border-t border-gray-100 space-y-2">
-          {service.items.map((item, i) => (
-            <ServiceItem key={item.label} item={item} index={i} />
-          ))}
-          {service.note && !service.items.some((item) => 'note' in item && item.note) && (
-            <div className="text-xs text-gray-500 italic mt-3 pt-3 border-t border-gray-200">
-              💡 {service.note}
-            </div>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function CategorySection({
-  category,
-  index,
-}: {
-  category: (typeof pricingCategories)[0];
-  index: number;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -324,80 +143,286 @@ function CategorySection({
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
-
   return (
     <div
       ref={ref}
-      className="opacity-0 translate-y-8 transition-all duration-500"
-      style={{ transitionDelay: `${index * 100}ms` }}
+      className={`opacity-0 translate-y-8 transition-all duration-700 ${className}`}
+      style={{ transitionDelay: `${delay}ms` }}
     >
-      <div className="flex items-center gap-3 mb-6">
-        <span className="text-4xl">{category.icon}</span>
-        <div>
-          <h3 className="text-2xl font-bold text-gray-900">{category.category}</h3>
-          {category.description && (
-            <p className="text-sm text-gray-500">{category.description}</p>
-          )}
+      {children}
+    </div>
+  );
+}
+
+function SubscriptionCard({ plan }: { plan: (typeof subscriptionPlans)[0] }) {
+  const Icon = plan.icon;
+  return (
+    <div
+      className={`relative h-full rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1 ${
+        plan.highlight
+          ? 'bg-gradient-to-br from-blue-700 to-cyan-600 text-white shadow-2xl shadow-blue-300/50 ring-2 ring-cyan-400'
+          : 'bg-white text-slate-900 border border-slate-100 shadow-lg hover:shadow-xl'
+      }`}
+    >
+      {plan.highlight && (
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-cyan-300 text-slate-950 text-xs font-bold px-4 py-1 rounded-full shadow-lg uppercase tracking-wider">
+          Most Popular
         </div>
+      )}
+      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-5 ${
+        plan.highlight ? 'bg-white/20' : 'bg-blue-50'
+      }`}>
+        <Icon size={24} className={plan.highlight ? 'text-cyan-200' : 'text-blue-600'} />
       </div>
-      <div className="space-y-4">
-        {category.services.map((service, i) => (
-          <ServiceBlock
-            key={service.name}
-            service={service}
-            categoryIndex={index}
-            serviceIndex={i}
-          />
+      <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
+      <p className={`text-sm mb-5 ${plan.highlight ? 'text-blue-100' : 'text-slate-500'}`}>
+        {plan.description}
+      </p>
+      <div className="flex items-baseline gap-1 mb-6">
+        <span className="text-4xl font-extrabold">{plan.price}</span>
+        <span className={`text-sm ${plan.highlight ? 'text-blue-200' : 'text-slate-400'}`}>
+          {plan.period}
+        </span>
+      </div>
+      <ul className="space-y-3 mb-8">
+        {plan.features.map((f) => (
+          <li key={f} className="flex items-start gap-2.5 text-sm">
+            <Check
+              size={18}
+              className={`flex-shrink-0 mt-0.5 ${plan.highlight ? 'text-cyan-300' : 'text-blue-600'}`}
+            />
+            <span className={plan.highlight ? 'text-blue-50' : 'text-slate-600'}>{f}</span>
+          </li>
         ))}
-      </div>
+      </ul>
+      <a
+        href={waLink(plan.cta)}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`block text-center font-bold py-3 rounded-full transition-all duration-300 ${
+          plan.highlight
+            ? 'bg-white text-blue-700 hover:bg-cyan-50'
+            : 'bg-slate-900 text-white hover:bg-slate-800'
+        }`}
+      >
+        Get Started
+      </a>
     </div>
   );
 }
 
 export default function Pricing() {
+  const [billing, setBilling] = useState<'subscription' | 'video' | 'branding'>('subscription');
+
   return (
-    <section id="pricing" className="py-24 bg-gray-50">
-      <div className="max-w-5xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <span className="inline-block text-blue-600 font-semibold text-sm uppercase tracking-widest mb-3">
-            Transparent Pricing
+    <section id="pricing" className="relative py-24 md:py-32 bg-gradient-to-b from-white to-slate-50 overflow-hidden">
+      <div className="absolute top-20 right-0 w-96 h-96 bg-blue-100/40 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="relative max-w-7xl mx-auto px-6">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <span className="inline-flex items-center gap-2 text-blue-600 font-semibold text-sm uppercase tracking-[0.25em] mb-4">
+            <span className="w-8 h-px bg-blue-400" />
+            Simple Pricing
+            <span className="w-8 h-px bg-blue-400" />
           </span>
-          <h2 className="text-5xl font-extrabold text-gray-900 mb-4">
-            💰 QUA Business —{' '}
-            <span className="bg-gradient-to-r from-blue-800 to-blue-500 bg-clip-text text-transparent">
-              Pricing & Payment Plans
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 mb-5 tracking-tight">
+            Subscription{' '}
+            <span className="bg-gradient-to-r from-blue-700 via-blue-500 to-cyan-500 bg-clip-text text-transparent">
+              Pricing
             </span>
           </h2>
-          <p className="text-gray-500 text-lg max-w-2xl mx-auto">
-            Flexible pricing for every service. Choose one-time projects or monthly retainers that grow with your business.
+          <p className="text-slate-500 text-lg max-w-2xl mx-auto leading-relaxed">
+            Flexible monthly subscriptions that grow with your business. No hidden fees,
+            cancel anytime.
           </p>
         </div>
 
-        <div className="space-y-12">
-          {pricingCategories.map((category, i) => (
-            <CategorySection key={category.category} category={category} index={i} />
-          ))}
+        {/* Tab switcher */}
+        <div className="flex flex-wrap justify-center gap-2 mb-12">
+          {[
+            { id: 'subscription', label: 'Subscriptions', icon: Sparkles },
+            { id: 'video', label: 'Video Production', icon: Video },
+            { id: 'branding', label: 'Branding & Content', icon: Palette },
+          ].map((tab) => {
+            const TabIcon = tab.icon;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setBilling(tab.id as typeof billing)}
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 ${
+                  billing === tab.id
+                    ? 'bg-gradient-to-r from-blue-700 to-cyan-500 text-white shadow-lg shadow-blue-200'
+                    : 'bg-white text-slate-600 border border-slate-200 hover:border-blue-300 hover:text-blue-600'
+                }`}
+              >
+                <TabIcon size={16} />
+                {tab.label}
+              </button>
+            );
+          })}
         </div>
 
-        {/* CTA Banner */}
-        <div className="mt-16 bg-gradient-to-r from-blue-800 to-blue-500 rounded-2xl p-10 md:p-14 text-center text-white shadow-xl">
-          <h3 className="text-3xl font-bold mb-3">Need a Custom Package?</h3>
+        {/* Subscription plans */}
+        {billing === 'subscription' && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+            {subscriptionPlans.map((plan, i) => (
+              <Reveal key={plan.name} delay={i * 100}>
+                <SubscriptionCard plan={plan} />
+              </Reveal>
+            ))}
+          </div>
+        )}
+
+        {/* Video production packages */}
+        {billing === 'video' && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+            {videoPackages.map((pkg, i) => (
+              <Reveal key={pkg.name} delay={i * 100}>
+                <div
+                  className={`relative h-full rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1 ${
+                    pkg.highlight
+                      ? 'bg-gradient-to-br from-slate-900 to-blue-900 text-white shadow-2xl ring-2 ring-cyan-400'
+                      : 'bg-white text-slate-900 border border-slate-100 shadow-lg hover:shadow-xl'
+                  }`}
+                >
+                  {pkg.highlight && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-cyan-300 text-slate-950 text-xs font-bold px-4 py-1 rounded-full shadow-lg uppercase tracking-wider">
+                      Best Value
+                    </div>
+                  )}
+                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-5 ${
+                    pkg.highlight ? 'bg-white/20' : 'bg-blue-50'
+                  }`}>
+                    <Video size={24} className={pkg.highlight ? 'text-cyan-300' : 'text-blue-600'} />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">{pkg.name}</h3>
+                  <p className={`text-sm mb-5 ${pkg.highlight ? 'text-blue-200' : 'text-slate-500'}`}>
+                    {pkg.description}
+                  </p>
+                  <div className="text-4xl font-extrabold mb-1">{pkg.price}</div>
+                  <div className={`text-xs mb-6 ${pkg.highlight ? 'text-blue-300' : 'text-slate-400'} uppercase tracking-wider`}>
+                    One-time project
+                  </div>
+                  <ul className="space-y-3 mb-8">
+                    {pkg.features.map((f) => (
+                      <li key={f} className="flex items-start gap-2.5 text-sm">
+                        <Check
+                          size={18}
+                          className={`flex-shrink-0 mt-0.5 ${pkg.highlight ? 'text-cyan-300' : 'text-blue-600'}`}
+                        />
+                        <span className={pkg.highlight ? 'text-blue-50' : 'text-slate-600'}>{f}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <a
+                    href={waLink(WA_MESSAGES.video)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`block text-center font-bold py-3 rounded-full transition-all duration-300 ${
+                      pkg.highlight
+                        ? 'bg-white text-slate-900 hover:bg-cyan-50'
+                        : 'bg-slate-900 text-white hover:bg-slate-800'
+                    }`}
+                  >
+                    Enquire Now
+                  </a>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        )}
+
+        {/* Branding subscription & content pricing */}
+        {billing === 'branding' && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+            {/* Branding subscription */}
+            <Reveal>
+              <div className="relative h-full rounded-3xl p-8 bg-gradient-to-br from-purple-700 to-blue-700 text-white shadow-2xl overflow-hidden">
+                <div className="absolute -top-12 -right-12 w-48 h-48 bg-white/10 rounded-full blur-2xl" />
+                <div className="relative">
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center">
+                      <Palette size={24} className="text-cyan-200" />
+                    </div>
+                    <span className="text-xs font-bold uppercase tracking-wider bg-white/15 px-3 py-1 rounded-full">
+                      Subscription
+                    </span>
+                  </div>
+                  <h3 className="text-2xl font-bold mb-2">{brandingSubscription.name}</h3>
+                  <p className="text-blue-100 text-sm mb-5">{brandingSubscription.description}</p>
+                  <div className="flex items-baseline gap-1 mb-6">
+                    <span className="text-4xl font-extrabold">{brandingSubscription.price}</span>
+                    <span className="text-blue-200 text-sm">{brandingSubscription.period}</span>
+                  </div>
+                  <ul className="space-y-3 mb-8">
+                    {brandingSubscription.features.map((f) => (
+                      <li key={f} className="flex items-start gap-2.5 text-sm">
+                        <Check size={18} className="flex-shrink-0 mt-0.5 text-cyan-300" />
+                        <span className="text-blue-50">{f}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <a
+                    href={waLink(WA_MESSAGES.branding)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block text-center font-bold py-3 rounded-full bg-white text-blue-700 hover:bg-cyan-50 transition-colors"
+                  >
+                    Subscribe Now
+                  </a>
+                </div>
+              </div>
+            </Reveal>
+
+            {/* Content creation pricing */}
+            <Reveal delay={100}>
+              <div className="h-full rounded-3xl p-8 bg-white border border-slate-100 shadow-lg">
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center">
+                    <Sparkles size={24} className="text-blue-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-slate-900">Content Creation</h3>
+                    <p className="text-sm text-slate-500">Flexible content pricing</p>
+                  </div>
+                </div>
+                <div className="space-y-3 mb-8">
+                  {contentPricing.map((item) => (
+                    <div
+                      key={item.label}
+                      className="flex items-center justify-between gap-4 p-4 rounded-xl bg-slate-50 hover:bg-blue-50 transition-colors"
+                    >
+                      <span className="text-sm font-medium text-slate-700">{item.label}</span>
+                      <span className="font-bold text-blue-600 whitespace-nowrap">{item.price}</span>
+                    </div>
+                  ))}
+                </div>
+                <a
+                  href={waLink("Hello Qua Business, I'd like to know more about your Content Creation pricing and packages.")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block text-center font-bold py-3 rounded-full bg-slate-900 text-white hover:bg-slate-800 transition-colors"
+                >
+                  Enquire on WhatsApp
+                </a>
+              </div>
+            </Reveal>
+          </div>
+        )}
+
+        {/* Bottom CTA */}
+        <div className="mt-16 bg-gradient-to-r from-blue-700 to-cyan-500 rounded-3xl p-10 md:p-14 text-center text-white shadow-xl">
+          <h3 className="text-2xl md:text-3xl font-bold mb-3">Need a Custom Package?</h3>
           <p className="text-blue-100 text-lg mb-6 max-w-2xl mx-auto">
             Every business is unique. Let's create a tailored plan that fits your exact needs and budget.
           </p>
           <a
-            href="https://wa.me/2347019791950"
+            href={waLink(WA_MESSAGES.quote)}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-white text-blue-700 font-bold px-10 py-4 rounded-full hover:bg-blue-50 transition-colors duration-200 shadow-lg"
+            className="inline-flex items-center gap-2 bg-white text-blue-700 font-bold px-10 py-4 rounded-full hover:bg-cyan-50 transition-colors shadow-lg"
           >
-            <svg
-              viewBox="0 0 24 24"
-              className="w-5 h-5 fill-current"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-            </svg>
             Get a Custom Quote
           </a>
         </div>

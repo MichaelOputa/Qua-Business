@@ -1,61 +1,20 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, LogOut, User } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
-import { useLocation, useNavigate } from 'react-router-dom';
-import Login from './Login';
-import SignUp from './SignUp';
+import { Menu, X, MessageCircle } from 'lucide-react';
+import { waLink, WA_MESSAGES } from '../lib/whatsapp';
 
 const links = [
-  { label: 'Home', href: '#home' },
-  { label: 'Services', href: '#services' },
-  { label: 'About', href: '#about' },
-  { label: 'Portfolio', href: '#portfolio' },
-  { label: 'Pricing', href: '#pricing' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Home', href: 'home' },
+  { label: 'Services', href: 'services' },
+  { label: 'About', href: 'about' },
+  { label: 'Portfolio', href: 'portfolio' },
+  { label: 'Pricing', href: 'pricing' },
+  { label: 'Contact', href: 'contact' },
 ];
-
-type AuthModal = 'login' | 'signup' | null;
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const [authModal, setAuthModal] = useState<AuthModal>(null);
-  const { user, userProfile, signOut } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const handleSectionNavigation = (section: string) => {
-    const targetId = section === 'home' ? 'home' : section;
-
-    if (location.pathname !== '/') {
-      navigate('/', { state: { section: targetId } });
-      return;
-    }
-
-    const target = document.getElementById(targetId);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
-
-  const handleGetStarted = () => {
-    handleSectionNavigation('contact');
-  };
-
-  const handleLogout = async () => {
-    try {
-      await signOut();
-      setOpen(false);
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
-  };
-
-  const handleProfileClick = () => {
-    navigate('/profile');
-  };
+  const [active, setActive] = useState('home');
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 40);
@@ -63,74 +22,80 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handler);
   }, []);
 
+  useEffect(() => {
+    const sections = links.map((l) => document.getElementById(l.href)).filter(Boolean) as HTMLElement[];
+    if (!sections.length) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActive(entry.target.id);
+        });
+      },
+      { rootMargin: '-40% 0px -55% 0px' }
+    );
+    sections.forEach((s) => observer.observe(s));
+    return () => observer.disconnect();
+  }, []);
+
+  const handleNav = (section: string) => {
+    setOpen(false);
+    const target = document.getElementById(section);
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-white shadow-md py-3' : 'bg-transparent py-5'
+        scrolled
+          ? 'bg-slate-950/85 backdrop-blur-md shadow-lg shadow-black/10 py-3 border-b border-white/5'
+          : 'bg-transparent py-5'
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        <a href="#home" className="flex items-center gap-3">
-          <img src="/Qua_Business.jpeg" alt="QUA Business" className="h-10 w-auto object-contain" />
-        </a>
+        {/* Logo */}
+        <button onClick={() => handleNav('home')} className="flex items-center gap-3">
+          <img
+            src="/Qua_Business.jpeg"
+            alt="QUA Business"
+            className="h-10 w-10 object-cover rounded-xl ring-1 ring-white/20"
+          />
+          <span className="text-white font-bold text-lg tracking-tight hidden sm:block">
+            QUA<span className="text-cyan-400">Business</span>
+          </span>
+        </button>
 
+        {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-8">
           {links.map((l) => (
             <button
               key={l.href}
-              type="button"
-              onClick={() => handleSectionNavigation(l.href.replace('#', ''))}
-              className={`text-sm font-medium transition-colors duration-200 hover:text-blue-600 ${
-                scrolled ? 'text-gray-700' : 'text-gray-800'
+              onClick={() => handleNav(l.href)}
+              className={`text-sm font-medium transition-colors duration-200 relative group ${
+                active === l.href ? 'text-cyan-300' : 'text-blue-100/90 hover:text-white'
               }`}
             >
               {l.label}
+              <span
+                className={`absolute -bottom-1 left-0 right-0 h-0.5 bg-cyan-400 rounded-full transition-all duration-300 ${
+                  active === l.href ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-0 group-hover:opacity-60 group-hover:scale-x-100'
+                }`}
+              />
             </button>
           ))}
-          
-          {user ? (
-            <div className="flex items-center gap-3">
-              <button
-                onClick={handleProfileClick}
-                className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-blue-400 hover:text-blue-600"
-              >
-                {userProfile?.avatar_url ? (
-                  <img src={userProfile.avatar_url} alt="Profile" className="h-8 w-8 rounded-full object-cover" />
-                ) : (
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 text-blue-600">
-                    <User size={16} />
-                  </div>
-                )}
-                <span>{userProfile?.username ? `@${userProfile.username}` : 'Profile'}</span>
-              </button>
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-2 bg-gradient-to-r from-red-600 to-red-500 text-white text-sm font-semibold px-4 py-2.5 rounded-full hover:opacity-90 transition-opacity duration-200"
-              >
-                <LogOut size={16} />
-                Logout
-              </button>
-            </div>
-          ) : (
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => setAuthModal('login')}
-                className="bg-gray-800 hover:bg-gray-700 text-white text-sm font-semibold px-6 py-2.5 rounded-full transition-colors duration-200"
-              >
-                Login
-              </button>
-              <button
-                onClick={() => setAuthModal('signup')}
-                className="bg-gradient-to-r from-blue-700 to-blue-500 text-white text-sm font-semibold px-6 py-2.5 rounded-full hover:opacity-90 transition-opacity duration-200"
-              >
-                Sign Up
-              </button>
-            </div>
-          )}
+          <a
+            href={waLink(WA_MESSAGES.buildWebsite)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 font-bold text-sm px-5 py-2.5 rounded-full shadow-lg shadow-blue-500/20 hover:shadow-cyan-400/40 hover:-translate-y-0.5 transition-all duration-300"
+          >
+            <MessageCircle size={15} />
+            Build Your Website
+          </a>
         </nav>
 
+        {/* Mobile toggle */}
         <button
-          className="md:hidden text-gray-800 hover:text-blue-600 transition-colors"
+          className="md:hidden text-white hover:text-cyan-300 transition-colors"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
         >
@@ -138,98 +103,40 @@ export default function Navbar() {
         </button>
       </div>
 
+      {/* Mobile menu */}
       {open && (
-        <div className="md:hidden bg-white border-t border-gray-100 shadow-lg">
-          <nav className="flex flex-col px-6 py-4 gap-4">
+        <div className="md:hidden bg-slate-950/95 backdrop-blur-lg border-t border-white/10 shadow-xl">
+          <nav className="flex flex-col px-6 py-4 gap-2">
             {links.map((l) => (
               <button
                 key={l.href}
-                type="button"
-                onClick={() => {
-                  handleSectionNavigation(l.href.replace('#', ''));
-                  setOpen(false);
-                }}
-                className="text-left text-gray-700 font-medium hover:text-blue-600 transition-colors"
+                onClick={() => handleNav(l.href)}
+                className={`text-left py-2.5 text-base font-medium transition-colors ${
+                  active === l.href ? 'text-cyan-300' : 'text-blue-100 hover:text-white'
+                }`}
               >
                 {l.label}
               </button>
             ))}
-
-            {user ? (
-              <>
-                <div className="border-t border-gray-200 pt-4">
-                  <div className="flex items-center gap-3 mb-4">
-                    {userProfile?.avatar_url && (
-                      <img
-                        src={userProfile.avatar_url}
-                        alt="Profile"
-                        className="w-12 h-12 rounded-full object-cover border-2 border-blue-400"
-                      />
-                    )}
-                    <div>
-                      <p className="text-sm font-medium text-gray-700">
-                        {userProfile?.username ? `@${userProfile.username}` : 'User'}
-                      </p>
-                      <p className="text-xs text-gray-500">{user.email}</p>
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <button
-                      onClick={() => { handleProfileClick(); setOpen(false); }}
-                      className="flex items-center gap-2 w-full bg-gradient-to-r from-green-600 to-green-500 text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:opacity-90 transition-opacity text-center justify-center"
-                    >
-                      <User size={16} />
-                      Edit Profile
-                    </button>
-                    <button
-                      onClick={handleLogout}
-                      className="flex items-center gap-2 w-full bg-gradient-to-r from-red-600 to-red-500 text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:opacity-90 transition-opacity text-center justify-center"
-                    >
-                      <LogOut size={16} />
-                      Logout
-                    </button>
-                  </div>
-                </div>
-              </>
-            ) : (
-              <>
-                <button
-                  onClick={() => { setAuthModal('login'); setOpen(false); }}
-                  className="bg-gray-800 hover:bg-gray-700 text-white text-sm font-semibold px-6 py-2.5 rounded-full transition-colors w-full text-center"
-                >
-                  Login
-                </button>
-                <button
-                  onClick={() => setAuthModal('signup')}
-                  className="bg-gradient-to-r from-blue-700 to-blue-500 text-white text-sm font-semibold px-6 py-2.5 rounded-full hover:opacity-90 transition-opacity w-full text-center"
-                >
-                  Sign Up
-                </button>
-              </>
-            )}
-            
-            <button
-              onClick={() => { handleGetStarted(); setOpen(false); }}
-              className="bg-gradient-to-r from-green-600 to-green-500 text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:opacity-90 transition-opacity w-full text-center"
+            <a
+              href={waLink(WA_MESSAGES.buildWebsite)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 font-bold text-sm px-5 py-3 rounded-full"
             >
-              Get Started
-            </button>
+              <MessageCircle size={16} />
+              Build Your Website
+            </a>
+            <a
+              href={waLink(WA_MESSAGES.quote)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 border border-white/20 text-white font-semibold text-sm px-5 py-3 rounded-full"
+            >
+              Request a Quote
+            </a>
           </nav>
         </div>
-      )}
-
-      {authModal === 'login' && (
-        <Login
-          onClose={() => setAuthModal(null)}
-          onSwitchToSignUp={() => setAuthModal('signup')}
-        />
-      )}
-
-      {authModal === 'signup' && (
-        <SignUp
-          onClose={() => setAuthModal(null)}
-          onSwitchToLogin={() => setAuthModal('login')}
-        />
       )}
     </header>
   );

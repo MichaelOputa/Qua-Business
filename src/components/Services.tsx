@@ -1,149 +1,72 @@
 import { useEffect, useRef } from 'react';
-import {
-  Globe,
-  Settings,
-  Search,
-  MessageCircle,
-  ShoppingCart,
-  Share2,
-  BarChart2,
-  Palette,
-  Star,
-  TrendingUp,
-  Megaphone,
-  Building2,
-  HeartHandshake,
-  LineChart,
-  Lightbulb,
-} from 'lucide-react';
+import { Globe, Palette, PenTool, Share2, Megaphone, Search, LayoutGrid as Layout, Lightbulb, Sparkles } from 'lucide-react';
+import { waLink, WA_MESSAGES } from '../lib/whatsapp';
 
 const services = [
   {
     icon: Globe,
-    title: 'Website Creation',
+    title: 'Website Design & Development',
     description:
-      'We build modern, fast, and fully responsive websites that represent your brand professionally and convert visitors into customers.',
-    tag: 'Core',
+      'Modern, fast, fully-responsive websites engineered to convert visitors into paying customers — from landing pages to eCommerce stores.',
+    features: ['Responsive Design', 'Fast Performance', 'SEO-Ready', 'CMS Integration'],
   },
   {
-    icon: Settings,
-    title: 'Website Management',
+    icon: Palette,
+    title: 'Branding & Identity Design',
     description:
-      'Ongoing updates, maintenance, and real-time performance monitoring — so your site always runs at peak performance.',
-    tag: 'Core',
+      'Distinctive brand identities — logos, color systems, typography, and guidelines that make your business instantly recognizable.',
+    features: ['Logo Design', 'Brand Guidelines', 'Visual Identity', 'Brand Strategy'],
   },
   {
-    icon: Search,
-    title: 'Online Visibility Setup',
+    icon: PenTool,
+    title: 'Graphic Design',
     description:
-      'SEO fundamentals, Google presence setup, and discoverability strategies to ensure the right people find your business.',
-    tag: 'Growth',
+      'Eye-catching flyers, posters, social media creatives, and marketing collateral engineered to stop the scroll and drive action.',
+    features: ['Flyers & Posters', 'Social Creatives', 'Print Design', 'Marketing Kits'],
   },
   {
-    icon: MessageCircle,
-    title: 'WhatsApp Business Setup',
+    icon: Sparkles,
+    title: 'Content Creation',
     description:
-      'Professional WhatsApp Business profile configured for your brand — with catalog, quick replies, and branded messaging.',
-    tag: 'Communication',
-  },
-  {
-    icon: ShoppingCart,
-    title: 'WhatsApp Sales Optimization',
-    description:
-      'Automated replies, product catalogs, and proven conversion strategies to turn chats into closed deals.',
-    tag: 'Sales',
+      'Scroll-stopping content — photography, short-form video, and copywriting that tells your story and builds an engaged audience.',
+    features: ['Short-Form Video', 'Photography', 'Copywriting', 'Content Calendars'],
   },
   {
     icon: Share2,
-    title: 'Social Media Setup',
-    description:
-      'Account creation, profile optimization, and brand consistency across all major social platforms.',
-    tag: 'Branding',
-  },
-  {
-    icon: BarChart2,
     title: 'Social Media Management',
     description:
-      'Consistent content posting, audience engagement, and growth strategies to build a loyal following.',
-    tag: 'Growth',
-  },
-  {
-    icon: Palette,
-    title: 'Content Creation (Basic)',
-    description:
-      'Eye-catching graphics, compelling captions, and brand-aligned posts designed to stop the scroll.',
-    tag: 'Creative',
-  },
-  {
-    icon: Star,
-    title: 'Offer & Promotion Setup',
-    description:
-      'Crafting irresistible offers and promotional campaigns that attract customers and drive revenue.',
-    tag: 'Sales',
-  },
-  {
-    icon: TrendingUp,
-    title: 'Traffic Generation (Basic)',
-    description:
-      'Organic traffic strategies, keyword targeting, and audience growth tactics to bring the right visitors to you.',
-    tag: 'Growth',
+      'End-to-end management of your social presence — content scheduling, community engagement, and growth strategies that build loyalty.',
+    features: ['Content Scheduling', 'Community Engagement', 'Growth Strategy', 'Monthly Reporting'],
   },
   {
     icon: Megaphone,
-    title: 'Ads Management',
+    title: 'Digital Marketing',
     description:
-      'Paid advertising setup and optimization across Facebook, Instagram, and Google to maximize your ROI.',
-    tag: 'Optional',
+      'Data-driven ad campaigns across Facebook, Instagram, and Google — optimized to maximize ROI and scale your customer base.',
+    features: ['Paid Ads', 'Email Marketing', 'Funnel Building', 'ROI Tracking'],
   },
   {
-    icon: Palette,
-    title: 'Branding & Visual Design',
+    icon: Search,
+    title: 'SEO Optimization',
     description:
-      'Consistent logo usage, brand identity refinement, and visual guidelines that make your business unforgettable.',
-    tag: 'Branding',
+      'Rank higher on Google with technical SEO, keyword strategy, and content optimization that brings qualified organic traffic.',
+    features: ['Technical SEO', 'Keyword Research', 'On-Page SEO', 'Local SEO'],
   },
   {
-    icon: Building2,
-    title: 'Business Profile Optimization',
+    icon: Layout,
+    title: 'UI/UX Design',
     description:
-      'Optimizing your Google Business Profile and online listings to rank higher and attract local customers.',
-    tag: 'Core',
-  },
-  {
-    icon: HeartHandshake,
-    title: 'Customer Engagement Support',
-    description:
-      'Building systems for responding, retaining, and delighting customers at every touchpoint.',
-    tag: 'Retention',
-  },
-  {
-    icon: LineChart,
-    title: 'Performance Tracking & Reporting',
-    description:
-      'Analytics dashboards and monthly reports that show exactly what\'s working and where to invest next.',
-    tag: 'Analytics',
+      'Intuitive, beautiful user experiences — wireframes, prototypes, and design systems that delight users and drive conversions.',
+    features: ['Wireframing', 'Prototyping', 'Design Systems', 'Usability Testing'],
   },
   {
     icon: Lightbulb,
-    title: 'Business Growth Strategy',
+    title: 'Business Consultation',
     description:
-      'One-on-one consulting and tailored scaling strategies built specifically for your goals and market.',
-    tag: 'Advisory',
+      'One-on-one strategic consulting to identify growth opportunities, refine your offer, and build a roadmap to scale.',
+    features: ['Growth Strategy', 'Market Positioning', 'Process Optimization', 'Advisory Sessions'],
   },
 ];
-
-const tagColors: Record<string, string> = {
-  Core: 'bg-blue-100 text-blue-700',
-  Growth: 'bg-emerald-100 text-emerald-700',
-  Communication: 'bg-sky-100 text-sky-700',
-  Sales: 'bg-orange-100 text-orange-700',
-  Branding: 'bg-rose-100 text-rose-700',
-  Creative: 'bg-amber-100 text-amber-700',
-  Optional: 'bg-gray-100 text-gray-600',
-  Retention: 'bg-teal-100 text-teal-700',
-  Analytics: 'bg-cyan-100 text-cyan-700',
-  Advisory: 'bg-blue-100 text-blue-700',
-};
 
 function ServiceCard({
   service,
@@ -176,22 +99,51 @@ function ServiceCard({
   return (
     <div
       ref={ref}
-      className="opacity-0 translate-y-8 transition-all duration-500 group bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 hover:border-blue-100 cursor-default"
-      style={{ transitionDelay: `${(index % 4) * 80}ms` }}
+      className="opacity-0 translate-y-8 transition-all duration-600 group relative bg-white rounded-3xl p-7 border border-slate-100 shadow-sm hover:shadow-xl hover:shadow-blue-100/60 hover:-translate-y-1.5 hover:border-blue-200"
+      style={{ transitionDelay: `${(index % 3) * 100}ms` }}
     >
-      <div className="flex items-start gap-4">
-        <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-blue-700 to-blue-500 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300">
-          <Icon size={22} className="text-white" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1 flex-wrap">
-            <h3 className="text-base font-bold text-gray-900">{service.title}</h3>
-            <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${tagColors[service.tag]}`}>
-              {service.tag}
-            </span>
+      {/* Glow accent */}
+      <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-blue-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+      <div className="relative">
+        <div className="flex items-center gap-4 mb-4">
+          <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-200/50 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+            <Icon size={24} className="text-white" />
           </div>
-          <p className="text-sm text-gray-500 leading-relaxed">{service.description}</p>
+          <div className="flex-1">
+            <div className="text-xs font-bold text-blue-600 uppercase tracking-wider">
+              0{index + 1}
+            </div>
+            <h3 className="text-lg font-bold text-slate-900 leading-tight">
+              {service.title}
+            </h3>
+          </div>
         </div>
+
+        <p className="text-sm text-slate-500 leading-relaxed mb-5">
+          {service.description}
+        </p>
+
+        <div className="flex flex-wrap gap-2 mb-6">
+          {service.features.map((feature) => (
+            <span
+              key={feature}
+              className="text-xs font-medium px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 group-hover:bg-blue-50 group-hover:text-blue-700 transition-colors duration-300"
+            >
+              {feature}
+            </span>
+          ))}
+        </div>
+
+        <a
+          href={waLink(`Hello Qua Business, I'd like to learn more about your ${service.title} service.`)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-cyan-600 transition-colors"
+        >
+          Enquire on WhatsApp
+          <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
+        </a>
       </div>
     </div>
   );
@@ -199,27 +151,49 @@ function ServiceCard({
 
 export default function Services() {
   return (
-    <section id="services" className="py-24 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <span className="inline-block text-blue-600 font-semibold text-sm uppercase tracking-widest mb-3">
+    <section id="services" className="relative py-24 md:py-32 bg-gradient-to-b from-slate-50 to-white overflow-hidden">
+      {/* Decorative */}
+      <div className="absolute top-20 right-0 w-96 h-96 bg-blue-100/40 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-20 left-0 w-80 h-80 bg-cyan-100/30 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="relative max-w-7xl mx-auto px-6">
+        {/* Header */}
+        <div className="text-center mb-16 md:mb-20">
+          <span className="inline-flex items-center gap-2 text-blue-600 font-semibold text-sm uppercase tracking-[0.25em] mb-4">
+            <span className="w-8 h-px bg-blue-400" />
             What We Offer
+            <span className="w-8 h-px bg-blue-400" />
           </span>
-          <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 mb-5 tracking-tight">
             Complete Digital Business{' '}
-            <span className="bg-gradient-to-r from-blue-800 to-blue-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-700 via-blue-500 to-cyan-500 bg-clip-text text-transparent">
               Solutions
             </span>
           </h2>
-          <p className="text-gray-500 text-lg max-w-2xl mx-auto">
-            Everything your business needs to thrive online — under one roof.
+          <p className="text-slate-500 text-lg max-w-2xl mx-auto leading-relaxed">
+            Nine specialized services under one roof — everything your brand needs
+            to look sharp, get found, and grow online.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-5">
+        {/* Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service, i) => (
             <ServiceCard key={service.title} service={service} index={i} />
           ))}
+        </div>
+
+        {/* CTA */}
+        <div className="text-center mt-16">
+          <a
+            href={waLink(WA_MESSAGES.buildWebsite)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-700 to-cyan-500 text-white font-bold px-9 py-4 rounded-full shadow-lg shadow-blue-200 hover:shadow-xl hover:shadow-cyan-200/60 hover:-translate-y-0.5 transition-all duration-300"
+          >
+            Start Your Project
+            <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
+          </a>
         </div>
       </div>
     </section>
