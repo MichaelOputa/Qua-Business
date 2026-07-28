@@ -1,128 +1,72 @@
-import { useEffect, useRef, useState } from 'react';
-import { Check, Zap, Crown, Rocket, Video, Palette, Sparkles } from 'lucide-react';
+import { useEffect, useRef } from 'react';
+import { Check, Zap, Rocket, Crown, Video, Palette, Megaphone, Film, Layers, Share2 } from 'lucide-react';
 import { waLink, WA_MESSAGES } from '../lib/whatsapp';
 
-const subscriptionPlans = [
+const websitePlans = [
   {
     name: 'Starter',
     icon: Zap,
-    price: '₦25,000',
-    period: '/month',
-    description: 'Perfect for small businesses getting online.',
+    setupFee: '₦18,000',
+    monthly: '₦7,200',
     features: [
-      '1 Service (Social Media OR Content)',
-      'Basic Content Creation (4 posts/month)',
-      'Social Media Setup & Optimization',
-      'Monthly Performance Report',
-      'WhatsApp Support',
+      'Professional business website',
+      'Domain registration',
+      'Website hosting',
+      'Monthly website maintenance',
+      'Product uploads and updates',
+      'Google Business Profile registration',
+      'Technical support',
     ],
     highlight: false,
-    cta: WA_MESSAGES.pricing,
   },
   {
     name: 'Growth',
     icon: Rocket,
-    price: '₦75,000',
-    period: '/month',
-    description: 'For brands ready to scale their digital presence.',
+    setupFee: '₦30,000',
+    monthly: '₦16,200',
     features: [
-      'Up to 2 Services Combined',
-      'Social Media Management (12 posts/month)',
-      'Content Creation (photos + short video)',
-      'Basic SEO Optimization',
-      'Monthly Strategy Call',
-      'Priority WhatsApp Support',
+      'Everything in the Starter plan',
+      'Search Engine Optimization (SEO)',
+      'Google Search Console setup',
+      'Website performance monitoring',
+      'Monthly website maintenance',
+      'Product uploads and updates',
+      'Google Business Profile registration',
+      'Priority technical support',
     ],
     highlight: true,
-    cta: WA_MESSAGES.pricing,
   },
   {
     name: 'Premium',
     icon: Crown,
-    price: '₦150,000+',
-    period: '/month',
-    description: 'Full-stack digital growth on autopilot.',
+    setupFee: '₦70,000',
+    monthly: '₦25,000',
     features: [
-      'Up to 4 Services Combined',
-      'Daily Social Media Management',
-      'Advanced Content Creation',
-      'SEO + Digital Marketing + Ads',
-      'Bi-weekly Strategy Calls',
-      'Dedicated Account Manager',
+      'Custom website design',
+      'Admin dashboard',
+      'Online payment integration',
+      'Full-year domain registration',
+      'Premium hosting',
+      'Advanced SEO',
+      'Product and inventory management',
+      'Analytics dashboard',
+      'Contact forms',
+      'Website security and backups',
+      'Unlimited maintenance',
+      'Priority technical support',
+      'Business email setup',
+      'Website management training',
     ],
     highlight: false,
-    cta: WA_MESSAGES.pricing,
   },
 ];
 
-const brandingSubscription = {
-  name: 'Weekly Flyer Subscription',
-  icon: Palette,
-  price: '₦50,000',
-  period: '/month',
-  description: 'Consistent, professional flyer designs every single week.',
-  features: [
-    '4 Flyer Designs per month (1/week)',
-    'Social media-ready dimensions',
-    '2 revisions per design',
-    'Brand-consistent templates',
-    '48-hour turnaround per design',
-    'Source files included',
-  ],
-};
-
-const videoPackages = [
-  {
-    name: 'Essential Video',
-    price: '₦300,000',
-    description: 'Single high-quality promotional video.',
-    features: [
-      '1 Promotional Video (up to 60 sec)',
-      'Professional Editing & Color Grading',
-      'Background Music & Voiceover',
-      '1 Round of Revisions',
-      '1080p HD Delivery',
-      '5-Day Turnaround',
-    ],
-  },
-  {
-    name: 'Professional Video',
-    price: '₦600,000',
-    description: 'Multi-video package for a full campaign.',
-    features: [
-      '3 Promotional Videos (60–90 sec each)',
-      'Professional Editing & Color Grading',
-      'Motion Graphics & Subtitles',
-      '2 Rounds of Revisions per Video',
-      '4K UHD Delivery',
-      '10-Day Turnaround',
-      'Social Media Cut Versions',
-    ],
-    highlight: true,
-  },
-  {
-    name: 'Cinematic Video',
-    price: '₦1,000,000',
-    description: 'Premium cinematic production for flagship brands.',
-    features: [
-      '5+ Promotional Videos (up to 2 min)',
-      'Cinematic Production Crew',
-      'Advanced Motion Graphics & VFX',
-      'Unlimited Revisions',
-      '4K UHD Delivery + Raw Footage',
-      '21-Day Turnaround',
-      'Multi-Platform Cut Versions',
-      'Brand Storytelling Strategy',
-    ],
-  },
-];
-
-const contentPricing = [
-  { label: 'Basic Content (4 posts/month)', price: '₦25,000' },
-  { label: 'Standard Content (12 posts/month)', price: '₦50,000' },
-  { label: 'Premium Content (daily + video)', price: '₦100,000' },
-  { label: 'Short-Form Video (Reels/TikTok)', price: '₦40,000 – ₦80,000' },
-  { label: 'Product Photography (per session)', price: '₦30,000 – ₦60,000' },
+const creativeServices = [
+  { icon: Megaphone, label: 'Commercial advertisements' },
+  { icon: Film, label: 'Brand promotional videos' },
+  { icon: Palette, label: 'Graphic design' },
+  { icon: Share2, label: 'Social media creatives' },
+  { icon: Layers, label: 'Motion graphics' },
 ];
 
 function Reveal({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
@@ -154,11 +98,12 @@ function Reveal({ children, delay = 0, className = '' }: { children: React.React
   );
 }
 
-function SubscriptionCard({ plan }: { plan: (typeof subscriptionPlans)[0] }) {
+function WebsitePlanCard({ plan }: { plan: (typeof websitePlans)[0] }) {
   const Icon = plan.icon;
+  const waText = `Hello Qua Business, I'd like to choose the ${plan.name} website plan (${plan.setupFee} setup + ${plan.monthly}/month).`;
   return (
     <div
-      className={`relative h-full rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1 ${
+      className={`relative h-full flex flex-col rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1 ${
         plan.highlight
           ? 'bg-gradient-to-br from-blue-700 to-cyan-600 text-white shadow-2xl shadow-blue-300/50 ring-2 ring-cyan-400'
           : 'bg-white text-slate-900 border border-slate-100 shadow-lg hover:shadow-xl'
@@ -174,17 +119,25 @@ function SubscriptionCard({ plan }: { plan: (typeof subscriptionPlans)[0] }) {
       }`}>
         <Icon size={24} className={plan.highlight ? 'text-cyan-200' : 'text-blue-600'} />
       </div>
-      <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
-      <p className={`text-sm mb-5 ${plan.highlight ? 'text-blue-100' : 'text-slate-500'}`}>
-        {plan.description}
-      </p>
-      <div className="flex items-baseline gap-1 mb-6">
-        <span className="text-4xl font-extrabold">{plan.price}</span>
-        <span className={`text-sm ${plan.highlight ? 'text-blue-200' : 'text-slate-400'}`}>
-          {plan.period}
-        </span>
+      <h3 className="text-xl font-bold mb-4">{plan.name}</h3>
+
+      <div className="space-y-1 mb-6">
+        <div className="flex items-baseline gap-2">
+          <span className={`text-xs uppercase tracking-wider font-semibold ${plan.highlight ? 'text-blue-200' : 'text-slate-400'}`}>
+            Website Setup
+          </span>
+        </div>
+        <div className="flex items-baseline gap-1">
+          <span className="text-3xl font-extrabold">{plan.setupFee}</span>
+          <span className={`text-sm ${plan.highlight ? 'text-blue-200' : 'text-slate-400'}`}>one-time</span>
+        </div>
+        <div className={`flex items-baseline gap-1 pt-2 ${plan.highlight ? 'border-t border-white/20' : 'border-t border-slate-100'} mt-2`}>
+          <span className="text-2xl font-extrabold">{plan.monthly}</span>
+          <span className={`text-sm ${plan.highlight ? 'text-blue-200' : 'text-slate-400'}`}>/month</span>
+        </div>
       </div>
-      <ul className="space-y-3 mb-8">
+
+      <ul className="space-y-3 mb-8 flex-1">
         {plan.features.map((f) => (
           <li key={f} className="flex items-start gap-2.5 text-sm">
             <Check
@@ -195,8 +148,9 @@ function SubscriptionCard({ plan }: { plan: (typeof subscriptionPlans)[0] }) {
           </li>
         ))}
       </ul>
+
       <a
-        href={waLink(plan.cta)}
+        href={waLink(waText)}
         target="_blank"
         rel="noopener noreferrer"
         className={`block text-center font-bold py-3 rounded-full transition-all duration-300 ${
@@ -205,15 +159,13 @@ function SubscriptionCard({ plan }: { plan: (typeof subscriptionPlans)[0] }) {
             : 'bg-slate-900 text-white hover:bg-slate-800'
         }`}
       >
-        Get Started
+        Choose This Plan
       </a>
     </div>
   );
 }
 
 export default function Pricing() {
-  const [billing, setBilling] = useState<'subscription' | 'video' | 'branding'>('subscription');
-
   return (
     <section id="pricing" className="relative py-24 md:py-32 bg-gradient-to-b from-white to-slate-50 overflow-hidden">
       <div className="absolute top-20 right-0 w-96 h-96 bg-blue-100/40 rounded-full blur-3xl pointer-events-none" />
@@ -227,189 +179,96 @@ export default function Pricing() {
             <span className="w-8 h-px bg-blue-400" />
           </span>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 mb-5 tracking-tight">
-            Subscription{' '}
+            Affordable Websites for{' '}
             <span className="bg-gradient-to-r from-blue-700 via-blue-500 to-cyan-500 bg-clip-text text-transparent">
-              Pricing
+              Growing Businesses
             </span>
           </h2>
+          <p className="text-slate-500 text-lg max-w-2xl mx-auto leading-relaxed mb-4">
+            Many businesses operate without a professional website because traditional website
+            development can be expensive. At Qua Business, we've changed that.
+          </p>
+          <p className="text-slate-500 text-lg max-w-2xl mx-auto leading-relaxed mb-4">
+            Instead of paying a huge amount upfront, you pay a one-time setup fee to launch your
+            website and then a monthly subscription that covers hosting, maintenance, updates, and
+            ongoing support.
+          </p>
           <p className="text-slate-500 text-lg max-w-2xl mx-auto leading-relaxed">
-            Flexible monthly subscriptions that grow with your business. No hidden fees,
-            cancel anytime.
+            This means your business stays online, secure, and up to date—without the stress of
+            large maintenance costs.
           </p>
         </div>
 
-        {/* Tab switcher */}
-        <div className="flex flex-wrap justify-center gap-2 mb-12">
-          {[
-            { id: 'subscription', label: 'Subscriptions', icon: Sparkles },
-            { id: 'video', label: 'Video Production', icon: Video },
-            { id: 'branding', label: 'Branding & Content', icon: Palette },
-          ].map((tab) => {
-            const TabIcon = tab.icon;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setBilling(tab.id as typeof billing)}
-                className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 ${
-                  billing === tab.id
-                    ? 'bg-gradient-to-r from-blue-700 to-cyan-500 text-white shadow-lg shadow-blue-200'
-                    : 'bg-white text-slate-600 border border-slate-200 hover:border-blue-300 hover:text-blue-600'
-                }`}
-              >
-                <TabIcon size={16} />
-                {tab.label}
-              </button>
-            );
-          })}
+        {/* Section subheading */}
+        <div className="text-center mb-10">
+          <h3 className="text-2xl md:text-3xl font-bold text-slate-900">
+            Choose the Package That's Right for You
+          </h3>
         </div>
 
-        {/* Subscription plans */}
-        {billing === 'subscription' && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-            {subscriptionPlans.map((plan, i) => (
-              <Reveal key={plan.name} delay={i * 100}>
-                <SubscriptionCard plan={plan} />
-              </Reveal>
-            ))}
-          </div>
-        )}
-
-        {/* Video production packages */}
-        {billing === 'video' && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-            {videoPackages.map((pkg, i) => (
-              <Reveal key={pkg.name} delay={i * 100}>
-                <div
-                  className={`relative h-full rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1 ${
-                    pkg.highlight
-                      ? 'bg-gradient-to-br from-slate-900 to-blue-900 text-white shadow-2xl ring-2 ring-cyan-400'
-                      : 'bg-white text-slate-900 border border-slate-100 shadow-lg hover:shadow-xl'
-                  }`}
-                >
-                  {pkg.highlight && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-cyan-300 text-slate-950 text-xs font-bold px-4 py-1 rounded-full shadow-lg uppercase tracking-wider">
-                      Best Value
-                    </div>
-                  )}
-                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-5 ${
-                    pkg.highlight ? 'bg-white/20' : 'bg-blue-50'
-                  }`}>
-                    <Video size={24} className={pkg.highlight ? 'text-cyan-300' : 'text-blue-600'} />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2">{pkg.name}</h3>
-                  <p className={`text-sm mb-5 ${pkg.highlight ? 'text-blue-200' : 'text-slate-500'}`}>
-                    {pkg.description}
-                  </p>
-                  <div className="text-4xl font-extrabold mb-1">{pkg.price}</div>
-                  <div className={`text-xs mb-6 ${pkg.highlight ? 'text-blue-300' : 'text-slate-400'} uppercase tracking-wider`}>
-                    One-time project
-                  </div>
-                  <ul className="space-y-3 mb-8">
-                    {pkg.features.map((f) => (
-                      <li key={f} className="flex items-start gap-2.5 text-sm">
-                        <Check
-                          size={18}
-                          className={`flex-shrink-0 mt-0.5 ${pkg.highlight ? 'text-cyan-300' : 'text-blue-600'}`}
-                        />
-                        <span className={pkg.highlight ? 'text-blue-50' : 'text-slate-600'}>{f}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <a
-                    href={waLink(WA_MESSAGES.video)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`block text-center font-bold py-3 rounded-full transition-all duration-300 ${
-                      pkg.highlight
-                        ? 'bg-white text-slate-900 hover:bg-cyan-50'
-                        : 'bg-slate-900 text-white hover:bg-slate-800'
-                    }`}
-                  >
-                    Enquire Now
-                  </a>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        )}
-
-        {/* Branding subscription & content pricing */}
-        {billing === 'branding' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
-            {/* Branding subscription */}
-            <Reveal>
-              <div className="relative h-full rounded-3xl p-8 bg-gradient-to-br from-purple-700 to-blue-700 text-white shadow-2xl overflow-hidden">
-                <div className="absolute -top-12 -right-12 w-48 h-48 bg-white/10 rounded-full blur-2xl" />
-                <div className="relative">
-                  <div className="flex items-center gap-3 mb-5">
-                    <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center">
-                      <Palette size={24} className="text-cyan-200" />
-                    </div>
-                    <span className="text-xs font-bold uppercase tracking-wider bg-white/15 px-3 py-1 rounded-full">
-                      Subscription
-                    </span>
-                  </div>
-                  <h3 className="text-2xl font-bold mb-2">{brandingSubscription.name}</h3>
-                  <p className="text-blue-100 text-sm mb-5">{brandingSubscription.description}</p>
-                  <div className="flex items-baseline gap-1 mb-6">
-                    <span className="text-4xl font-extrabold">{brandingSubscription.price}</span>
-                    <span className="text-blue-200 text-sm">{brandingSubscription.period}</span>
-                  </div>
-                  <ul className="space-y-3 mb-8">
-                    {brandingSubscription.features.map((f) => (
-                      <li key={f} className="flex items-start gap-2.5 text-sm">
-                        <Check size={18} className="flex-shrink-0 mt-0.5 text-cyan-300" />
-                        <span className="text-blue-50">{f}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <a
-                    href={waLink(WA_MESSAGES.branding)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block text-center font-bold py-3 rounded-full bg-white text-blue-700 hover:bg-cyan-50 transition-colors"
-                  >
-                    Subscribe Now
-                  </a>
-                </div>
-              </div>
+        {/* Website plans */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+          {websitePlans.map((plan, i) => (
+            <Reveal key={plan.name} delay={i * 100}>
+              <WebsitePlanCard plan={plan} />
             </Reveal>
+          ))}
+        </div>
 
-            {/* Content creation pricing */}
-            <Reveal delay={100}>
-              <div className="h-full rounded-3xl p-8 bg-white border border-slate-100 shadow-lg">
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center">
-                    <Sparkles size={24} className="text-blue-600" />
+        {/* Other Digital Services */}
+        <div className="mt-20">
+          <div className="text-center mb-10">
+            <span className="inline-flex items-center gap-2 text-blue-600 font-semibold text-sm uppercase tracking-[0.25em] mb-4">
+              <span className="w-8 h-px bg-blue-400" />
+              More From Us
+              <span className="w-8 h-px bg-blue-400" />
+            </span>
+            <h3 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">
+              Other Digital Services
+            </h3>
+            <p className="text-slate-500 text-lg max-w-2xl mx-auto leading-relaxed">
+              We also help businesses build a stronger brand with high-quality creative content.
+            </p>
+          </div>
+
+          <Reveal>
+            <div className="relative rounded-3xl p-8 md:p-12 bg-gradient-to-br from-purple-700 to-blue-700 text-white shadow-2xl overflow-hidden">
+              <div className="absolute -top-12 -right-12 w-56 h-56 bg-white/10 rounded-full blur-2xl" />
+              <div className="relative">
+                <div className="flex items-center gap-3 mb-8">
+                  <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center">
+                    <Video size={24} className="text-cyan-200" />
                   </div>
-                  <div>
-                    <h3 className="text-2xl font-bold text-slate-900">Content Creation</h3>
-                    <p className="text-sm text-slate-500">Flexible content pricing</p>
-                  </div>
+                  <h4 className="text-2xl font-bold">Visual Content & Graphics</h4>
                 </div>
-                <div className="space-y-3 mb-8">
-                  {contentPricing.map((item) => (
-                    <div
-                      key={item.label}
-                      className="flex items-center justify-between gap-4 p-4 rounded-xl bg-slate-50 hover:bg-blue-50 transition-colors"
-                    >
-                      <span className="text-sm font-medium text-slate-700">{item.label}</span>
-                      <span className="font-bold text-blue-600 whitespace-nowrap">{item.price}</span>
-                    </div>
-                  ))}
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-10">
+                  {creativeServices.map((service) => {
+                    const ServiceIcon = service.icon;
+                    return (
+                      <div
+                        key={service.label}
+                        className="flex flex-col items-start gap-3 bg-white/10 rounded-2xl p-5 hover:bg-white/15 transition-colors"
+                      >
+                        <ServiceIcon size={22} className="text-cyan-200" />
+                        <span className="text-sm font-medium text-blue-50">{service.label}</span>
+                      </div>
+                    );
+                  })}
                 </div>
+
                 <a
-                  href={waLink("Hello Qua Business, I'd like to know more about your Content Creation pricing and packages.")}
+                  href={waLink("Hello Qua Business, I'd like to choose your Visual Content & Graphics service.")}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block text-center font-bold py-3 rounded-full bg-slate-900 text-white hover:bg-slate-800 transition-colors"
+                  className="inline-block text-center font-bold py-3 px-10 rounded-full bg-white text-blue-700 hover:bg-cyan-50 transition-colors"
                 >
-                  Enquire on WhatsApp
+                  Choose This Plan
                 </a>
               </div>
-            </Reveal>
-          </div>
-        )}
+            </div>
+          </Reveal>
+        </div>
 
         {/* Bottom CTA */}
         <div className="mt-16 bg-gradient-to-r from-blue-700 to-cyan-500 rounded-3xl p-10 md:p-14 text-center text-white shadow-xl">

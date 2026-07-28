@@ -4,8 +4,8 @@ import { waLink, WA_MESSAGES } from '../lib/whatsapp';
 
 const links = [
   { label: 'Home', href: 'home' },
-  { label: 'Services', href: 'services' },
   { label: 'About', href: 'about' },
+  { label: 'Services', href: 'services' },
   { label: 'Portfolio', href: 'portfolio' },
   { label: 'Pricing', href: 'pricing' },
   { label: 'Contact', href: 'contact' },
