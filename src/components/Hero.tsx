@@ -33,11 +33,11 @@ export default function Hero() {
             mounted ? 'scale-100' : 'scale-110'
           } ${scrolled ? 'scale-105' : ''}`}
         />
-        {/* Dark overlay for contrast — tuned to the logo's navy, more transparent so the photo reads through */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0a1230]/70 via-[#0d1b4c]/55 to-[#1e3a8a]/60" />
-        {/* Accent glows in the logo's royal blue */}
-        <div className="absolute -top-40 -right-32 w-[600px] h-[600px] bg-[#1d4ed8]/25 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-32 w-[500px] h-[500px] bg-[#3b82f6]/20 rounded-full blur-3xl" />
+        {/* Dark overlay — near-solid deep navy to match reference */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#050a1a]/95 via-[#0a1230]/92 to-[#0d1b4c]/90" />
+        {/* Accent glows, softened */}
+        <div className="absolute -top-40 -right-32 w-[600px] h-[600px] bg-[#1d4ed8]/15 rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 -left-32 w-[500px] h-[500px] bg-[#3b82f6]/12 rounded-full blur-3xl" />
         {/* Subtle grid */}
         <div
           className="absolute inset-0 opacity-[0.07]"
@@ -57,8 +57,8 @@ export default function Hero() {
             mounted ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
           }`}
         >
-          <Sparkles size={14} className="text-[#3b82f6]" />
-          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-blue-100">
+          <Sparkles size={14} className="text-[#5ec8fa]" />
+          <span className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-200">
             Digital Growth Studio
           </span>
         </div>
@@ -87,16 +87,16 @@ export default function Hero() {
         >
           Turning Business Into{' '}
           <span className="relative inline-block">
-            <span className="bg-gradient-to-r from-[#1d4ed8] via-[#2563eb] to-[#3b82f6] bg-clip-text text-transparent">
+            <span className="text-[#5ec8fa]">
               Real Hustle
             </span>
-            <span className="absolute -bottom-1 left-0 right-0 h-1 bg-gradient-to-r from-[#1d4ed8] to-[#3b82f6] rounded-full" />
+            <span className="absolute -bottom-1 left-0 right-0 h-1 bg-[#5ec8fa]/60 rounded-full" />
           </span>
         </h1>
 
         {/* Subheadline */}
         <p
-          className={`text-lg md:text-xl text-blue-100/90 max-w-2xl mb-10 leading-relaxed transition-all duration-700 delay-250 ${
+          className={`text-lg md:text-xl text-slate-300/90 max-w-2xl mb-10 leading-relaxed transition-all duration-700 delay-250 ${
             mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
           }`}
         >
@@ -114,7 +114,7 @@ export default function Hero() {
             href={waLink(WA_MESSAGES.buildWebsite)}
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex items-center justify-center gap-2 bg-gradient-to-r from-[#1d4ed8] to-[#3b82f6] text-white font-bold px-8 py-4 rounded-full shadow-lg shadow-blue-600/30 hover:shadow-xl hover:shadow-blue-400/40 transition-all duration-300 hover:-translate-y-0.5"
+            className="group flex items-center justify-center gap-2 bg-white text-[#0a1230] font-bold px-8 py-4 rounded-full shadow-lg shadow-black/20 hover:bg-slate-50 hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
           >
             Build Your Website
             <ArrowRight
@@ -124,7 +124,7 @@ export default function Hero() {
           </a>
           <button
             onClick={scrollToServices}
-            className="flex items-center justify-center gap-2 border-2 border-white/30 text-white font-semibold px-8 py-4 rounded-full hover:bg-white/10 hover:border-white/50 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5"
+            className="flex items-center justify-center gap-2 border-2 border-white/15 text-white font-semibold px-8 py-4 rounded-full hover:bg-white/5 hover:border-white/25 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5"
           >
             Explore Services
           </button>
@@ -142,10 +142,10 @@ export default function Hero() {
             { number: '16+', label: 'Service Offerings' },
           ].map((stat) => (
             <div key={stat.label} className="text-center">
-              <div className="text-3xl md:text-5xl font-extrabold bg-gradient-to-b from-white to-blue-200 bg-clip-text text-transparent">
+              <div className="text-3xl md:text-5xl font-extrabold text-white">
                 {stat.number}
               </div>
-              <div className="text-xs md:text-sm text-blue-200/80 mt-1 uppercase tracking-wider">
+              <div className="text-xs md:text-sm text-slate-400 mt-1 uppercase tracking-wider">
                 {stat.label}
               </div>
             </div>
@@ -156,7 +156,7 @@ export default function Hero() {
       {/* Scroll indicator */}
       <button
         onClick={scrollToServices}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-blue-200/70 hover:text-white transition-colors animate-bounce"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-slate-400 hover:text-white transition-colors animate-bounce"
         aria-label="Scroll to services"
       >
         <span className="text-[10px] tracking-[0.3em] uppercase">Scroll</span>
