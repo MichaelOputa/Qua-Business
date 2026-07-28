@@ -55,13 +55,10 @@ export default function Navbar() {
         {/* Logo */}
         <button onClick={() => handleNav('home')} className="flex items-center gap-3">
           <img
-            src="/Qua_Business.jpeg"
+            src="/Qua_Business_transparent.png"
             alt="QUA Business"
-            className="h-10 w-10 object-cover rounded-xl ring-1 ring-white/20"
+            className="h-8 sm:h-9 w-auto object-contain"
           />
-          <span className="text-white font-bold text-lg tracking-tight hidden sm:block">
-            QUA<span className="text-cyan-400">Business</span>
-          </span>
         </button>
 
         {/* Desktop nav */}
@@ -71,12 +68,12 @@ export default function Navbar() {
               key={l.href}
               onClick={() => handleNav(l.href)}
               className={`text-sm font-medium transition-colors duration-200 relative group ${
-                active === l.href ? 'text-cyan-300' : 'text-blue-100/90 hover:text-white'
+                active === l.href ? 'text-[#3b82f6]' : 'text-blue-100/90 hover:text-white'
               }`}
             >
               {l.label}
               <span
-                className={`absolute -bottom-1 left-0 right-0 h-0.5 bg-cyan-400 rounded-full transition-all duration-300 ${
+                className={`absolute -bottom-1 left-0 right-0 h-0.5 bg-[#3b82f6] rounded-full transition-all duration-300 ${
                   active === l.href ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-0 group-hover:opacity-60 group-hover:scale-x-100'
                 }`}
               />
@@ -86,7 +83,7 @@ export default function Navbar() {
             href={waLink(WA_MESSAGES.buildWebsite)}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 font-bold text-sm px-5 py-2.5 rounded-full shadow-lg shadow-blue-500/20 hover:shadow-cyan-400/40 hover:-translate-y-0.5 transition-all duration-300"
+            className="flex items-center gap-2 bg-gradient-to-r from-[#1d4ed8] to-[#3b82f6] text-white font-bold text-sm px-5 py-2.5 rounded-full shadow-lg shadow-blue-600/20 hover:shadow-blue-400/40 hover:-translate-y-0.5 transition-all duration-300"
           >
             <MessageCircle size={15} />
             Build Your Website
@@ -95,7 +92,7 @@ export default function Navbar() {
 
         {/* Mobile toggle */}
         <button
-          className="md:hidden text-white hover:text-cyan-300 transition-colors"
+          className="md:hidden text-white hover:text-[#3b82f6] transition-colors"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
         >
@@ -112,7 +109,7 @@ export default function Navbar() {
                 key={l.href}
                 onClick={() => handleNav(l.href)}
                 className={`text-left py-2.5 text-base font-medium transition-colors ${
-                  active === l.href ? 'text-cyan-300' : 'text-blue-100 hover:text-white'
+                  active === l.href ? 'text-[#3b82f6]' : 'text-blue-100 hover:text-white'
                 }`}
               >
                 {l.label}
@@ -122,7 +119,7 @@ export default function Navbar() {
               href={waLink(WA_MESSAGES.buildWebsite)}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-2 flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 font-bold text-sm px-5 py-3 rounded-full"
+              className="mt-2 flex items-center justify-center gap-2 bg-gradient-to-r from-[#1d4ed8] to-[#3b82f6] text-white font-bold text-sm px-5 py-3 rounded-full"
             >
               <MessageCircle size={16} />
               Build Your Website

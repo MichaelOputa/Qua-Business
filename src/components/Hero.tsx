@@ -33,11 +33,11 @@ export default function Hero() {
             mounted ? 'scale-100' : 'scale-110'
           } ${scrolled ? 'scale-105' : ''}`}
         />
-        {/* Dark overlay for premium contrast */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-950/90 via-slate-900/80 to-blue-950/85" />
-        {/* Accent glows */}
-        <div className="absolute -top-40 -right-32 w-[600px] h-[600px] bg-blue-500/20 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-32 w-[500px] h-[500px] bg-cyan-400/15 rounded-full blur-3xl" />
+        {/* Dark overlay for contrast — tuned to the logo's navy, more transparent so the photo reads through */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0a1230]/70 via-[#0d1b4c]/55 to-[#1e3a8a]/60" />
+        {/* Accent glows in the logo's royal blue */}
+        <div className="absolute -top-40 -right-32 w-[600px] h-[600px] bg-[#1d4ed8]/25 rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 -left-32 w-[500px] h-[500px] bg-[#3b82f6]/20 rounded-full blur-3xl" />
         {/* Subtle grid */}
         <div
           className="absolute inset-0 opacity-[0.07]"
@@ -57,7 +57,7 @@ export default function Hero() {
             mounted ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
           }`}
         >
-          <Sparkles size={14} className="text-cyan-300" />
+          <Sparkles size={14} className="text-[#3b82f6]" />
           <span className="text-xs font-semibold uppercase tracking-[0.3em] text-blue-100">
             Digital Growth Studio
           </span>
@@ -70,7 +70,7 @@ export default function Hero() {
           }`}
         >
           <div className="relative">
-            <div className="absolute inset-0 bg-blue-500/30 blur-2xl rounded-full" />
+            <div className="absolute inset-0 bg-[#2563eb]/30 blur-2xl rounded-full" />
             <img
               src="/Qua_Business.jpeg"
               alt="QUA Business"
@@ -87,10 +87,10 @@ export default function Hero() {
         >
           Turning Business Into{' '}
           <span className="relative inline-block">
-            <span className="bg-gradient-to-r from-cyan-300 via-blue-400 to-blue-300 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#1d4ed8] via-[#2563eb] to-[#3b82f6] bg-clip-text text-transparent">
               Real Hustle
             </span>
-            <span className="absolute -bottom-1 left-0 right-0 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full" />
+            <span className="absolute -bottom-1 left-0 right-0 h-1 bg-gradient-to-r from-[#1d4ed8] to-[#3b82f6] rounded-full" />
           </span>
         </h1>
 
@@ -114,7 +114,7 @@ export default function Hero() {
             href={waLink(WA_MESSAGES.buildWebsite)}
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 font-bold px-8 py-4 rounded-full shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-cyan-400/40 transition-all duration-300 hover:-translate-y-0.5"
+            className="group flex items-center justify-center gap-2 bg-gradient-to-r from-[#1d4ed8] to-[#3b82f6] text-white font-bold px-8 py-4 rounded-full shadow-lg shadow-blue-600/30 hover:shadow-xl hover:shadow-blue-400/40 transition-all duration-300 hover:-translate-y-0.5"
           >
             Build Your Website
             <ArrowRight
