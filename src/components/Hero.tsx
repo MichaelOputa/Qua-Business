@@ -27,7 +27,7 @@ export default function Hero() {
       {/* Background image — shown directly, no color overlay */}
       <div className="absolute inset-0">
         <img
-          src="/hero-bg.jpg"
+          src="/hero-bg-landscape.jpg"
           alt="Digital business growth"
           className={`h-full w-full object-cover transition-transform duration-[2000ms] ease-out ${
             mounted ? 'scale-100' : 'scale-110'

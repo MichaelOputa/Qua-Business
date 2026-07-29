@@ -46,7 +46,7 @@ export default function Navbar() {
   return (
     <header
       style={{
-        backgroundImage: "url('/hero-bg.jpg')",
+        backgroundImage: "url('/hero-bg-landscape.jpg')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
