@@ -45,13 +45,20 @@ export default function Navbar() {
 
   return (
     <header
+      style={{
+        backgroundImage: "url('/hero-bg.jpg')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
+      }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-slate-950/85 backdrop-blur-md shadow-lg shadow-black/10 py-3 border-b border-white/5'
-          : 'bg-transparent py-5'
+          ? 'shadow-lg shadow-black/10 py-3 border-b border-white/5'
+          : 'py-5'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+      {scrolled && <div className="absolute inset-0 bg-slate-950/50 backdrop-blur-md pointer-events-none" />}
+      <div className="relative max-w-7xl mx-auto px-6 flex items-center justify-between">
         {/* Logo */}
         <button onClick={() => handleNav('home')} className="flex items-center gap-3">
           <img

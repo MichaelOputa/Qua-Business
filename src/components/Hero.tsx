@@ -24,28 +24,14 @@ export default function Hero() {
       ref={ref}
       className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
     >
-      {/* Background image */}
+      {/* Background image — shown directly, no color overlay */}
       <div className="absolute inset-0">
         <img
-          src="/qua_people.jpeg"
+          src="/hero-bg.jpg"
           alt="Digital business growth"
           className={`h-full w-full object-cover transition-transform duration-[2000ms] ease-out ${
             mounted ? 'scale-100' : 'scale-110'
           } ${scrolled ? 'scale-105' : ''}`}
-        />
-        {/* Dark overlay — near-solid deep navy to match reference */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#050a1a]/95 via-[#0a1230]/92 to-[#0d1b4c]/90" />
-        {/* Accent glows, softened */}
-        <div className="absolute -top-40 -right-32 w-[600px] h-[600px] bg-[#1d4ed8]/15 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-32 w-[500px] h-[500px] bg-[#3b82f6]/12 rounded-full blur-3xl" />
-        {/* Subtle grid */}
-        <div
-          className="absolute inset-0 opacity-[0.07]"
-          style={{
-            backgroundImage:
-              'linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)',
-            backgroundSize: '64px 64px',
-          }}
         />
       </div>
 
