@@ -1,214 +1,148 @@
-import { useEffect, useRef } from 'react';
-import { Globe, Palette, PenTool, Share2, Megaphone, Search, LayoutGrid as Layout, Lightbulb, Sparkles } from 'lucide-react';
-import { waLink, WA_MESSAGES } from '../lib/whatsapp';
+import { useState } from 'react';
 
-const services = [
+type Service = {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  features: string[];
+};
+
+const services: Service[] = [
   {
-    icon: Globe,
+    id: 'website-design',
     title: 'Website Design & Development',
-    image: '/images/services/website-design.jpg',
-    description:
-      'Modern, fast, fully-responsive websites engineered to convert visitors into paying customers — from landing pages to eCommerce stores.',
-    features: ['Responsive Design', 'Fast Performance', 'SEO-Ready', 'CMS Integration'],
+    description: 'Custom-built websites that blend stunning visuals with seamless functionality to elevate your online presence.',
+    image: 'https://images.pexels.com/photos/160107/pexels-photo-160107.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+    features: ['Responsive Design', 'Fast Loading', 'SEO Friendly', 'Modern UI'],
   },
   {
-    icon: Palette,
-    title: 'Branding & Identity Design',
-    image: '/images/services/branding-identity.jpg',
-    description:
-      'Distinctive brand identities — logos, color systems, typography, and guidelines that make your business instantly recognizable.',
+    id: 'branding-identity',
+    title: 'Branding & Identity',
+    description: 'Craft a memorable brand identity that resonates with your audience and sets you apart from the competition.',
+    image: 'https://images.pexels.com/photos/7661590/pexels-photo-7661590.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
     features: ['Logo Design', 'Brand Guidelines', 'Visual Identity', 'Brand Strategy'],
   },
   {
-    icon: PenTool,
+    id: 'graphic-design',
     title: 'Graphic Design',
-    image: '/images/services/graphic-design.jpg',
-    description:
-      'Eye-catching flyers, posters, social media creatives, and marketing collateral engineered to stop the scroll and drive action.',
-    features: ['Flyers & Posters', 'Social Creatives', 'Print Design', 'Marketing Kits'],
+    description: 'Eye-catching visual content that communicates your message and captivates your audience across every platform.',
+    image: 'https://images.pexels.com/photos/16313664/pexels-photo-16313664.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+    features: ['Print Design', 'Digital Graphics', 'Illustrations', 'Marketing Materials'],
   },
   {
-    icon: Sparkles,
+    id: 'content-creation',
     title: 'Content Creation',
-    image: '/images/services/content-creation.jpg',
-    description:
-      'Scroll-stopping content — photography, short-form video, and copywriting that tells your story and builds an engaged audience.',
-    features: ['Short-Form Video', 'Photography', 'Copywriting', 'Content Calendars'],
+    description: 'Compelling content that tells your story, engages your audience, and drives meaningful conversions.',
+    image: 'https://images.pexels.com/photos/37033778/pexels-photo-37033778.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+    features: ['Video Production', 'Photography', 'Copywriting', 'Content Strategy'],
   },
   {
-    icon: Share2,
+    id: 'social-media-management',
     title: 'Social Media Management',
-    image: '/images/services/social-media-management.jpg',
-    description:
-      'End-to-end management of your social presence — content scheduling, community engagement, and growth strategies that build loyalty.',
-    features: ['Content Scheduling', 'Community Engagement', 'Growth Strategy', 'Monthly Reporting'],
+    description: 'Strategic social media management that builds your community and amplifies your brand voice online.',
+    image: 'https://images.pexels.com/photos/32944547/pexels-photo-32944547.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+    features: ['Content Scheduling', 'Community Engagement', 'Analytics Reports', 'Platform Strategy'],
   },
   {
-    icon: Megaphone,
+    id: 'digital-marketing',
     title: 'Digital Marketing',
-    image: '/images/services/digital-marketing.jpg',
-    description:
-      'Data-driven ad campaigns across Facebook, Instagram, and Google — optimized to maximize ROI and scale your customer base.',
-    features: ['Paid Ads', 'Email Marketing', 'Funnel Building', 'ROI Tracking'],
+    description: 'Data-driven marketing campaigns that reach the right audience at the right time for maximum ROI.',
+    image: 'https://images.pexels.com/photos/97080/pexels-photo-97080.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+    features: ['PPC Advertising', 'Email Marketing', 'Campaign Management', 'Conversion Optimization'],
   },
   {
-    icon: Search,
+    id: 'seo-optimization',
     title: 'SEO Optimization',
-    image: '/images/services/seo-optimization.jpg',
-    description:
-      'Rank higher on Google with technical SEO, keyword strategy, and content optimization that brings qualified organic traffic.',
-    features: ['Technical SEO', 'Keyword Research', 'On-Page SEO', 'Local SEO'],
+    description: 'Boost your search rankings and organic traffic with proven SEO strategies tailored to your business.',
+    image: 'https://images.pexels.com/photos/270637/pexels-photo-270637.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+    features: ['Keyword Research', 'On-Page SEO', 'Technical Audit', 'Link Building'],
   },
   {
-    icon: Layout,
+    id: 'ui-ux-design',
     title: 'UI/UX Design',
-    image: '/images/services/ui-ux-design.jpg',
-    description:
-      'Intuitive, beautiful user experiences — wireframes, prototypes, and design systems that delight users and drive conversions.',
-    features: ['Wireframing', 'Prototyping', 'Design Systems', 'Usability Testing'],
+    description: 'Intuitive, user-centered designs that create delightful experiences and drive engagement on every screen.',
+    image: 'https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+    features: ['User Research', 'Wireframing', 'Prototyping', 'Usability Testing'],
   },
   {
-    icon: Lightbulb,
+    id: 'business-consultation',
     title: 'Business Consultation',
-    image: '/images/services/business-consultation.jpg',
-    description:
-      'One-on-one strategic consulting to identify growth opportunities, refine your offer, and build a roadmap to scale.',
-    features: ['Growth Strategy', 'Market Positioning', 'Process Optimization', 'Advisory Sessions'],
+    description: 'Strategic guidance to help you navigate the digital landscape and achieve sustainable growth.',
+    image: 'https://images.pexels.com/photos/36765719/pexels-photo-36765719.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+    features: ['Strategy Planning', 'Market Analysis', 'Growth Consulting', 'Digital Transformation'],
   },
 ];
 
-function ServiceCard({
-  service,
-  index,
-}: {
-  service: (typeof services)[0];
-  index: number;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          el.classList.add('opacity-100', 'translate-y-0');
-          el.classList.remove('opacity-0', 'translate-y-8');
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  const Icon = service.icon;
-
-  return (
-    <div
-      ref={ref}
-      className="opacity-0 translate-y-8 transition-all duration-600 group relative bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:shadow-blue-100/60 hover:-translate-y-1.5 hover:border-blue-200"
-      style={{ transitionDelay: `${(index % 3) * 100}ms` }}
-    >
-      {/* Image banner */}
-      <div className="relative h-40 rounded-t-3xl overflow-hidden">
-        <img
-          src={service.image}
-          alt={service.title}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/10 to-transparent" />
-        <div className="absolute top-4 right-4 text-xs font-bold text-white/90 uppercase tracking-wider">
-          0{index + 1}
-        </div>
-      </div>
-      <div className="absolute top-40 -mt-6 left-6 w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-200/50 ring-4 ring-white group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-        <Icon size={24} className="text-white" />
-      </div>
-
-      {/* Glow accent */}
-      <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-blue-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-
-      <div className="relative p-7 pt-10">
-        <h3 className="text-lg font-bold text-slate-900 leading-tight mb-3">
-          {service.title}
-        </h3>
-
-        <p className="text-sm text-slate-500 leading-relaxed mb-5">
-          {service.description}
-        </p>
-
-        <div className="flex flex-wrap gap-2 mb-6">
-          {service.features.map((feature) => (
-            <span
-              key={feature}
-              className="text-xs font-medium px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 group-hover:bg-blue-50 group-hover:text-blue-700 transition-colors duration-300"
-            >
-              {feature}
-            </span>
-          ))}
-        </div>
-
-        <a
-          href={waLink(`Hello Qua Business, I'd like to learn more about your ${service.title} service.`)}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-cyan-600 transition-colors"
-        >
-          Enquire on WhatsApp
-          <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
-        </a>
-      </div>
-    </div>
-  );
-}
-
 export default function Services() {
-  return (
-    <section id="services" className="relative py-24 md:py-32 bg-gradient-to-b from-slate-50 to-white overflow-hidden">
-      {/* Decorative */}
-      <div className="absolute top-20 right-0 w-96 h-96 bg-blue-100/40 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-20 left-0 w-80 h-80 bg-cyan-100/30 rounded-full blur-3xl pointer-events-none" />
+  const [activeId, setActiveId] = useState<string | null>(null);
 
-      <div className="relative max-w-7xl mx-auto px-6">
-        {/* Header */}
-        <div className="text-center mb-16 md:mb-20">
-          <span className="inline-flex items-center gap-2 text-blue-600 font-semibold text-sm uppercase tracking-[0.25em] mb-4">
-            <span className="w-8 h-px bg-blue-400" />
+  return (
+    <section id="services" className="py-24 bg-neutral-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <span className="text-sm font-semibold tracking-widest text-blue-600 uppercase">
             What We Offer
-            <span className="w-8 h-px bg-blue-400" />
           </span>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 mb-5 tracking-tight">
-            Complete Digital Business{' '}
-            <span className="bg-gradient-to-r from-blue-700 via-blue-500 to-cyan-500 bg-clip-text text-transparent">
-              Solutions
-            </span>
+          <h2 className="mt-3 text-4xl font-bold text-neutral-900 sm:text-5xl">
+            Our Services
           </h2>
-          <p className="text-slate-500 text-lg max-w-2xl mx-auto leading-relaxed">
-            Nine specialized services under one roof — everything your brand needs
-            to look sharp, get found, and grow online.
+          <p className="mt-4 text-lg text-neutral-600 max-w-2xl mx-auto">
+            We provide a comprehensive suite of creative and digital services to help your business thrive in the modern landscape.
           </p>
         </div>
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {services.map((service, i) => (
-            <ServiceCard key={service.title} service={service} index={i} />
-          ))}
-        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {services.map((service) => (
+            <article
+              key={service.id}
+              className="group bg-white rounded-2xl overflow-hidden shadow-sm border border-neutral-200 transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+              onMouseEnter={() => setActiveId(service.id)}
+              onMouseLeave={() => setActiveId(null)}
+            >
+              <div className="relative h-56 overflow-hidden">
+                <img
+                  src={service.image}
+                  alt={service.title}
+                  loading="lazy"
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-neutral-900/60 to-transparent" />
+                <h3 className="absolute bottom-4 left-5 right-5 text-xl font-bold text-white">
+                  {service.title}
+                </h3>
+              </div>
 
-        {/* CTA */}
-        <div className="text-center mt-16">
-          <a
-            href={waLink(WA_MESSAGES.buildWebsite)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-700 to-cyan-500 text-white font-bold px-9 py-4 rounded-full shadow-lg shadow-blue-200 hover:shadow-xl hover:shadow-cyan-200/60 hover:-translate-y-0.5 transition-all duration-300"
-          >
-            Start Your Project
-            <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
-          </a>
+              <div className="p-6">
+                <p className="text-neutral-600 leading-relaxed">
+                  {service.description}
+                </p>
+
+                <ul className="mt-5 grid grid-cols-2 gap-2">
+                  {service.features.map((feature) => (
+                    <li
+                      key={feature}
+                      className="flex items-center gap-2 text-sm text-neutral-700"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+
+                <button
+                  type="button"
+                  className={`mt-6 w-full py-2.5 rounded-lg font-medium text-sm transition-all duration-300 ${
+                    activeId === service.id
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-blue-50 text-blue-600 hover:bg-blue-100'
+                  }`}
+                >
+                  Learn More
+                </button>
+              </div>
+            </article>
+          ))}
         </div>
       </div>
     </section>
