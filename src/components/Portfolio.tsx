@@ -4,76 +4,28 @@ import { waLink, WA_MESSAGES } from '../lib/whatsapp';
 
 const projects = [
   {
-    title: 'SwiftMove Logistics Platform',
-    category: 'Web App · Logistics',
-    year: '2026',
-    description:
-      'A full-featured logistics platform with real-time shipment tracking, fleet management dashboard, and automated dispatch workflows that cut delivery delays by 40%.',
-    tech: ['React', 'Node.js', 'PostgreSQL', 'Real-time'],
-    image:
-      'https://images.pexels.com/photos/1427541/pexels-photo-1427541.jpeg?auto=compress&cs=tinysrgb&w=900',
-    accent: 'from-blue-600 to-cyan-500',
-    link: '#',
-  },
-  {
-    title: 'MarketHub eCommerce Store',
-    category: 'eCommerce · Retail',
-    year: '2026',
-    description:
-      'A high-conversion online store with product catalog, secure checkout, inventory management, and integrated payment gateways — lifting sales 3x in 6 months.',
-    tech: ['Next.js', 'Stripe', 'Tailwind', 'SEO'],
-    image:
-      'https://images.pexels.com/photos/5632370/pexels-photo-5632370.jpeg?auto=compress&cs=tinysrgb&w=900',
-    accent: 'from-emerald-600 to-teal-500',
-    link: '#',
-  },
-  {
-    title: 'ProLine Production Dashboard',
-    category: 'Dashboard · Analytics',
+    title: 'Lady Sculptor Arts',
+    category: 'Portfolio · Creative Arts',
     year: '2025',
     description:
-      'An enterprise-grade production monitoring dashboard with live KPIs, shift reporting, machine utilization metrics, and alert management for a manufacturing client.',
-    tech: ['React', 'D3.js', 'WebSockets', 'Enterprise'],
+      'A refined portfolio site for a sculptor and creative artist — showcasing a curated gallery of works with smooth reveal animations and a fully responsive, mobile-first layout.',
+    tech: ['React', 'TypeScript', 'Vite', 'Tailwind'],
     image:
-      'https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=900',
+      '/Lady Sculptor Arts Gallery.png',
     accent: 'from-orange-600 to-amber-500',
-    link: '#',
+    link: 'https://lady-sculptor-arts.vercel.app/',
   },
   {
-    title: 'NourishCart Grocery Platform',
-    category: 'eCommerce · Food Retail',
-    year: '2025',
+    title: 'Buyoo Marketplace',
+    category: 'eCommerce · Multi-Vendor Platform',
+    year: '2026',
     description:
-      'A fast online grocery platform with smart filters, loyalty points, scheduled delivery slots, and WhatsApp order notifications for a local supermarket chain.',
-    tech: ['React', 'Supabase', 'WhatsApp API', 'PWA'],
+      'A full-stack multi-role marketplace supporting Customers, Vendors, Brokers, and Custom Vendors — with a complete auth system, dashboards, and integrated Paystack payments.',
+    tech: ['Next.js 14', 'Prisma', 'PostgreSQL', 'Paystack'],
     image:
-      'https://images.pexels.com/photos/1005638/pexels-photo-1005638.jpeg?auto=compress&cs=tinysrgb&w=900',
-    accent: 'from-green-600 to-lime-500',
-    link: '#',
-  },
-  {
-    title: 'FreightPro Cargo Tracker',
-    category: 'Web App · Freight',
-    year: '2025',
-    description:
-      'A cargo and freight management system enabling clients to book shipments, track containers in real time, and generate customs documentation automatically.',
-    tech: ['Vue.js', 'Express', 'MongoDB', 'Maps API'],
-    image:
-      'https://images.pexels.com/photos/906982/pexels-photo-906982.jpeg?auto=compress&cs=tinysrgb&w=900',
-    accent: 'from-sky-600 to-blue-500',
-    link: '#',
-  },
-  {
-    title: 'FactoryPulse Operations Hub',
-    category: 'Dashboard · Operations',
-    year: '2024',
-    description:
-      'A centralized operations hub for manufacturing plants — tracking output targets, downtime events, quality checks, and supply chain status in one view.',
-    tech: ['React', 'TypeScript', 'GraphQL', 'Real-time'],
-    image:
-      'https://images.pexels.com/photos/3862130/pexels-photo-3862130.jpeg?auto=compress&cs=tinysrgb&w=900',
-    accent: 'from-slate-600 to-gray-500',
-    link: '#',
+      '/WhatsApp_Image_2026-07-01_at_00.05.18.jpeg',
+    accent: 'from-blue-600 to-cyan-500',
+    link: 'https://buyoo-marketplace.vercel.app/',
   },
 ];
 
@@ -162,6 +114,8 @@ function TimelineItem({
 
             <a
               href={project.link}
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-cyan-600 transition-colors"
             >
               <ExternalLink size={15} />

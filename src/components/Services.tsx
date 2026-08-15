@@ -6,6 +6,7 @@ const services = [
   {
     icon: Globe,
     title: 'Website Design & Development',
+    image: '/images/services/website-design.jpg',
     description:
       'Modern, fast, fully-responsive websites engineered to convert visitors into paying customers — from landing pages to eCommerce stores.',
     features: ['Responsive Design', 'Fast Performance', 'SEO-Ready', 'CMS Integration'],
@@ -13,6 +14,7 @@ const services = [
   {
     icon: Palette,
     title: 'Branding & Identity Design',
+    image: '/images/services/branding-identity.jpg',
     description:
       'Distinctive brand identities — logos, color systems, typography, and guidelines that make your business instantly recognizable.',
     features: ['Logo Design', 'Brand Guidelines', 'Visual Identity', 'Brand Strategy'],
@@ -20,6 +22,7 @@ const services = [
   {
     icon: PenTool,
     title: 'Graphic Design',
+    image: '/images/services/graphic-design.jpg',
     description:
       'Eye-catching flyers, posters, social media creatives, and marketing collateral engineered to stop the scroll and drive action.',
     features: ['Flyers & Posters', 'Social Creatives', 'Print Design', 'Marketing Kits'],
@@ -27,6 +30,7 @@ const services = [
   {
     icon: Sparkles,
     title: 'Content Creation',
+    image: '/images/services/content-creation.jpg',
     description:
       'Scroll-stopping content — photography, short-form video, and copywriting that tells your story and builds an engaged audience.',
     features: ['Short-Form Video', 'Photography', 'Copywriting', 'Content Calendars'],
@@ -34,6 +38,7 @@ const services = [
   {
     icon: Share2,
     title: 'Social Media Management',
+    image: '/images/services/social-media-management.jpg',
     description:
       'End-to-end management of your social presence — content scheduling, community engagement, and growth strategies that build loyalty.',
     features: ['Content Scheduling', 'Community Engagement', 'Growth Strategy', 'Monthly Reporting'],
@@ -41,6 +46,7 @@ const services = [
   {
     icon: Megaphone,
     title: 'Digital Marketing',
+    image: '/images/services/digital-marketing.jpg',
     description:
       'Data-driven ad campaigns across Facebook, Instagram, and Google — optimized to maximize ROI and scale your customer base.',
     features: ['Paid Ads', 'Email Marketing', 'Funnel Building', 'ROI Tracking'],
@@ -48,6 +54,7 @@ const services = [
   {
     icon: Search,
     title: 'SEO Optimization',
+    image: '/images/services/seo-optimization.jpg',
     description:
       'Rank higher on Google with technical SEO, keyword strategy, and content optimization that brings qualified organic traffic.',
     features: ['Technical SEO', 'Keyword Research', 'On-Page SEO', 'Local SEO'],
@@ -55,6 +62,7 @@ const services = [
   {
     icon: Layout,
     title: 'UI/UX Design',
+    image: '/images/services/ui-ux-design.jpg',
     description:
       'Intuitive, beautiful user experiences — wireframes, prototypes, and design systems that delight users and drive conversions.',
     features: ['Wireframing', 'Prototyping', 'Design Systems', 'Usability Testing'],
@@ -62,6 +70,7 @@ const services = [
   {
     icon: Lightbulb,
     title: 'Business Consultation',
+    image: '/images/services/business-consultation.jpg',
     description:
       'One-on-one strategic consulting to identify growth opportunities, refine your offer, and build a roadmap to scale.',
     features: ['Growth Strategy', 'Market Positioning', 'Process Optimization', 'Advisory Sessions'],
@@ -99,26 +108,32 @@ function ServiceCard({
   return (
     <div
       ref={ref}
-      className="opacity-0 translate-y-8 transition-all duration-600 group relative bg-white rounded-3xl p-7 border border-slate-100 shadow-sm hover:shadow-xl hover:shadow-blue-100/60 hover:-translate-y-1.5 hover:border-blue-200"
+      className="opacity-0 translate-y-8 transition-all duration-600 group relative bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:shadow-blue-100/60 hover:-translate-y-1.5 hover:border-blue-200"
       style={{ transitionDelay: `${(index % 3) * 100}ms` }}
     >
+      {/* Image banner */}
+      <div className="relative h-40 rounded-t-3xl overflow-hidden">
+        <img
+          src={service.image}
+          alt={service.title}
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/10 to-transparent" />
+        <div className="absolute top-4 right-4 text-xs font-bold text-white/90 uppercase tracking-wider">
+          0{index + 1}
+        </div>
+      </div>
+      <div className="absolute top-40 -mt-6 left-6 w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-200/50 ring-4 ring-white group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+        <Icon size={24} className="text-white" />
+      </div>
+
       {/* Glow accent */}
       <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-blue-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
-      <div className="relative">
-        <div className="flex items-center gap-4 mb-4">
-          <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-200/50 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-            <Icon size={24} className="text-white" />
-          </div>
-          <div className="flex-1">
-            <div className="text-xs font-bold text-blue-600 uppercase tracking-wider">
-              0{index + 1}
-            </div>
-            <h3 className="text-lg font-bold text-slate-900 leading-tight">
-              {service.title}
-            </h3>
-          </div>
-        </div>
+      <div className="relative p-7 pt-10">
+        <h3 className="text-lg font-bold text-slate-900 leading-tight mb-3">
+          {service.title}
+        </h3>
 
         <p className="text-sm text-slate-500 leading-relaxed mb-5">
           {service.description}

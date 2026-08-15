@@ -74,8 +74,8 @@ export default function About() {
             <div className="absolute -inset-4 bg-gradient-to-br from-blue-200 to-cyan-200 rounded-3xl rotate-3 opacity-30 blur-2xl" />
             <div className="relative rounded-3xl overflow-hidden shadow-2xl ring-1 ring-slate-200">
               <img
-                src="/qua_person.jpeg"
-                alt="QUA Business team at work"
+                src="/qua_business_collage.jpeg"
+                alt="QUA Business clients — Nigerian entrepreneurs across food, fashion, textiles, and logistics"
                 className="w-full h-[420px] object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent" />
