@@ -62,11 +62,41 @@ const websitePlans = [
 ];
 
 const creativeServices = [
-  { icon: Megaphone, label: 'Commercial advertisements' },
-  { icon: Film, label: 'Brand promotional videos' },
-  { icon: Palette, label: 'Graphic design' },
-  { icon: Share2, label: 'Social media creatives' },
-  { icon: Layers, label: 'Motion graphics' },
+  {
+    icon: Megaphone,
+    label: 'Commercial advertisements',
+    description: 'Professional TV and online ad spots that put your product in front of the right audience.',
+    image: 'https://images.pexels.com/photos/9703183/pexels-photo-9703183.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+    waMessage: "Hello Qua Business, I'm interested in your Commercial Advertisements service. Please share more details and pricing.",
+  },
+  {
+    icon: Film,
+    label: 'Brand promotional videos',
+    description: 'Cinematic videos that tell your brand story and connect emotionally with customers.',
+    image: 'https://images.pexels.com/photos/17486300/pexels-photo-17486300.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+    waMessage: "Hello Qua Business, I'm interested in your Brand Promotional Videos service. Please share more details and pricing.",
+  },
+  {
+    icon: Palette,
+    label: 'Graphic design',
+    description: 'Logos, flyers, brochures, and marketing materials designed to make your brand stand out.',
+    image: 'https://images.pexels.com/photos/16313664/pexels-photo-16313664.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+    waMessage: "Hello Qua Business, I'm interested in your Graphic Design service. Please share more details and pricing.",
+  },
+  {
+    icon: Share2,
+    label: 'Social media creatives',
+    description: 'Eye-catching posts, reels, and graphics that boost engagement across all your social platforms.',
+    image: 'https://images.pexels.com/photos/6956303/pexels-photo-6956303.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+    waMessage: "Hello Qua Business, I'm interested in your Social Media Creatives service. Please share more details and pricing.",
+  },
+  {
+    icon: Layers,
+    label: 'Motion graphics',
+    description: 'Animated logos, explainer videos, and dynamic visuals that bring your message to life.',
+    image: 'https://images.pexels.com/photos/8817542/pexels-photo-8817542.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+    waMessage: "Hello Qua Business, I'm interested in your Motion Graphics service. Please share more details and pricing.",
+  },
 ];
 
 function Reveal({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
@@ -100,7 +130,6 @@ function Reveal({ children, delay = 0, className = '' }: { children: React.React
 
 function WebsitePlanCard({ plan }: { plan: (typeof websitePlans)[0] }) {
   const Icon = plan.icon;
-  const waText = `Hello Qua Business, I'd like to choose the ${plan.name} website plan (${plan.setupFee} setup + ${plan.monthly}/month).`;
   return (
     <div
       className={`relative h-full flex flex-col rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1 ${
@@ -150,7 +179,7 @@ function WebsitePlanCard({ plan }: { plan: (typeof websitePlans)[0] }) {
       </ul>
 
       <a
-        href={waLink(waText)}
+        href={waLink(WA_MESSAGES.pricing)}
         target="_blank"
         rel="noopener noreferrer"
         className={`block text-center font-bold py-3 rounded-full transition-all duration-300 ${
@@ -232,7 +261,7 @@ export default function Pricing() {
           </div>
 
           <Reveal>
-            <div className="relative rounded-3xl p-8 md:p-12 bg-gradient-to-br from-purple-700 to-blue-700 text-white shadow-2xl overflow-hidden">
+            <div className="relative rounded-3xl p-8 md:p-12 bg-gradient-to-br from-blue-800 to-cyan-700 text-white shadow-2xl overflow-hidden">
               <div className="absolute -top-12 -right-12 w-56 h-56 bg-white/10 rounded-full blur-2xl" />
               <div className="relative">
                 <div className="flex items-center gap-3 mb-8">
@@ -242,23 +271,40 @@ export default function Pricing() {
                   <h4 className="text-2xl font-bold">Visual Content & Graphics</h4>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-10">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
                   {creativeServices.map((service) => {
                     const ServiceIcon = service.icon;
                     return (
-                      <div
+                      <a
                         key={service.label}
-                        className="flex flex-col items-start gap-3 bg-white/10 rounded-2xl p-5 hover:bg-white/15 transition-colors"
+                        href={waLink(service.waMessage)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group flex flex-col rounded-2xl bg-white/10 overflow-hidden hover:bg-white/15 transition-all duration-300 hover:-translate-y-1 hover:ring-2 hover:ring-cyan-300/50"
                       >
-                        <ServiceIcon size={22} className="text-cyan-200" />
-                        <span className="text-sm font-medium text-blue-50">{service.label}</span>
-                      </div>
+                        <div className="relative h-40 overflow-hidden">
+                          <img
+                            src={service.image}
+                            alt={service.label}
+                            loading="lazy"
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-blue-900/80 to-transparent" />
+                          <div className="absolute bottom-3 left-3 w-9 h-9 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                            <ServiceIcon size={18} className="text-cyan-200" />
+                          </div>
+                        </div>
+                        <div className="p-5">
+                          <h5 className="text-sm font-bold text-white mb-1.5">{service.label}</h5>
+                          <p className="text-xs text-blue-100 leading-relaxed">{service.description}</p>
+                        </div>
+                      </a>
                     );
                   })}
                 </div>
 
                 <a
-                  href={waLink("Hello Qua Business, I'd like to choose your Visual Content & Graphics service.")}
+                  href={waLink(WA_MESSAGES.branding)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-block text-center font-bold py-3 px-10 rounded-full bg-white text-blue-700 hover:bg-cyan-50 transition-colors"
