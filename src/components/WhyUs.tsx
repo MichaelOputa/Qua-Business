@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
-import { CheckCircle2, Rocket } from 'lucide-react';
-import { waLink, WA_MESSAGES } from '@/lib/whatsapp';
+import { CheckCircle2 } from 'lucide-react';
+import { waLink, WA_MESSAGES } from '../lib/whatsapp';
 
 const reasons = [
   { title: 'Results-Driven', desc: 'Every action we take is tied to measurable outcomes that grow your bottom line.' },
@@ -49,23 +49,6 @@ function Card({ title, desc, index }: { title: string; desc: string; index: numb
 export default function WhyUs() {
   return (
     <section id="why-us" className="py-24 md:py-32 bg-gradient-to-b from-slate-50 to-white">
-      {/*
-        "float" is a custom keyframe, not a default Tailwind animation.
-        animate-[float_4s_ease-in-out_infinite] silently does nothing unless
-        the keyframes are registered (e.g. in tailwind.config.js under
-        theme.extend.keyframes/animation). Defining it inline here guarantees
-        it works regardless of the Tailwind config.
-      */}
-      <style>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-14px); }
-        }
-        .animate-float {
-          animation: float 4s ease-in-out infinite;
-        }
-      `}</style>
-
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <span className="inline-flex items-center gap-2 text-blue-600 font-semibold text-sm uppercase tracking-[0.25em] mb-4">
@@ -90,14 +73,10 @@ export default function WhyUs() {
           ))}
         </div>
 
-        {/* CTA band with animated image */}
-        <div className="mt-16 relative overflow-hidden bg-gradient-to-r from-blue-700 to-cyan-500 rounded-3xl p-10 md:p-14 shadow-xl">
-          {/* Decorative animated blobs */}
-          <div className="absolute -top-16 -left-16 w-72 h-72 bg-white/10 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute -bottom-20 -right-10 w-80 h-80 bg-cyan-300/20 rounded-full blur-3xl animate-pulse [animation-delay:1.5s]" />
-
-          <div className="relative grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-            <div className="text-center md:text-left text-white">
+        {/* CTA band */}
+        <div className="mt-16 relative overflow-hidden bg-gradient-to-r from-blue-700 to-cyan-500 rounded-3xl shadow-xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 items-center">
+            <div className="p-10 md:p-14 text-center md:text-left text-white">
               <h3 className="text-3xl md:text-4xl font-extrabold mb-4">Ready to Dominate Online?</h3>
               <p className="text-blue-100 text-lg mb-8 max-w-xl mx-auto md:mx-0">
                 Let's build something extraordinary together. Your growth story starts here.
@@ -106,24 +85,21 @@ export default function WhyUs() {
                 href={waLink(WA_MESSAGES.buildWebsite)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-white text-blue-700 font-bold px-10 py-4 rounded-full hover:bg-cyan-50 transition-all hover:scale-105 shadow-lg"
+                className="inline-block bg-white text-blue-700 font-bold px-10 py-4 rounded-full hover:bg-cyan-50 transition-colors shadow-lg"
               >
-                <Rocket size={20} />
                 Start Your Journey
               </a>
             </div>
 
-            {/* Animated image with floating + pulse motion */}
-            <div className="relative flex items-center justify-center">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-64 h-64 md:w-80 md:h-80 bg-white/10 rounded-full blur-2xl animate-ping [animation-duration:3s]" />
-              </div>
+            <div className="relative h-64 md:h-full min-h-[280px]">
               <img
-                src="https://images.pexels.com/photos/6289027/pexels-photo-6289027.jpeg?auto=compress&cs=tinysrgb&h=650&w=940"
-                alt="Businessman launching a successful startup rocket"
-                className="relative w-72 md:w-96 rounded-2xl shadow-2xl ring-4 ring-white/20 animate-float object-cover"
-                loading="lazy"
+                src="/team-collaboration.jpg"
+                alt="Team collaborating on a growth strategy"
+                className="absolute inset-0 w-full h-full object-cover"
               />
+              {/* Fades the photo into the gradient so it reads as one cohesive panel */}
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-700/80 via-blue-700/10 to-transparent md:bg-gradient-to-r md:from-blue-700/70 md:via-transparent md:to-transparent" />
+              <div className="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-blue-700 to-transparent hidden md:block" />
             </div>
           </div>
         </div>
