@@ -21,7 +21,9 @@ export default function App() {
         <Portfolio />
         <GraphicsPortfolio />
         <Pricing />
-        <WhyUs />
+        <div className="min-h-screen bg-white">
+      <WhyUs />
+    </div>
         <Contact />
       </main>
       <Footer />

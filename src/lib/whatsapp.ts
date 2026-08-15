@@ -4,9 +4,9 @@ export const waLink = (message: string) =>
   `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 
 export const WA_MESSAGES = {
-  general: "Hello Qua Business, I'd like to learn more about your services.",
+  general: "Hi QUA Business! I'd like to know more about your services.",
   buildWebsite:
-    "Hello Qua Business, I'd like to build a website for my business. Please provide more information about your website development packages.",
+    "Hi QUA Business! I'd like to start my journey and build something extraordinary together.",
   quote:
     "Hello Qua Business, I'd like to request a quote for a custom project. Could you share more details?",
   branding:
