@@ -74,34 +74,29 @@ export default function WhyUs() {
         </div>
 
         {/* CTA band */}
-        <div className="mt-16 relative overflow-hidden bg-gradient-to-r from-blue-700 to-cyan-500 rounded-3xl shadow-xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 items-center">
-            <div className="p-10 md:p-14 text-center md:text-left text-white">
-              <h3 className="text-3xl md:text-4xl font-extrabold mb-4">Ready to Dominate Online?</h3>
-              <p className="text-blue-100 text-lg mb-8 max-w-xl mx-auto md:mx-0">
-                Let's build something extraordinary together. Your growth story starts here.
-              </p>
-              <a
-                href={waLink(WA_MESSAGES.buildWebsite)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block bg-white text-blue-700 font-bold px-10 py-4 rounded-full hover:bg-cyan-50 transition-colors shadow-lg"
-              >
-                Start Your Journey
-              </a>
-            </div>
+        <div className="mt-16 bg-gradient-to-r from-blue-700 to-cyan-500 rounded-3xl p-10 md:p-14 text-center text-white shadow-xl">
+          <h3 className="text-3xl md:text-4xl font-extrabold mb-4">Ready to Dominate Online?</h3>
+          <p className="text-blue-100 text-lg mb-8 max-w-xl mx-auto">
+            Let's build something extraordinary together. Your growth story starts here.
+          </p>
 
-            <div className="relative h-64 md:h-full min-h-[280px]">
-              <img
-                src="/team-collaboration.jpg"
-                alt="Team collaborating on a growth strategy"
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-              {/* Fades the photo into the gradient so it reads as one cohesive panel */}
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-700/80 via-blue-700/10 to-transparent md:bg-gradient-to-r md:from-blue-700/70 md:via-transparent md:to-transparent" />
-              <div className="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-blue-700 to-transparent hidden md:block" />
-            </div>
+          {/* Trust signal: real team photo, right before the CTA button */}
+          <div className="flex justify-center mb-8">
+            <img
+              src="/team-collaboration.jpg"
+              alt="The QUA Business team collaborating"
+              className="w-full max-w-sm h-40 md:h-44 object-cover rounded-2xl border-4 border-white/30 shadow-lg"
+            />
           </div>
+
+          <a
+            href={waLink(WA_MESSAGES.buildWebsite)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block bg-white text-blue-700 font-bold px-10 py-4 rounded-full hover:bg-cyan-50 transition-colors shadow-lg"
+          >
+            Start Your Journey
+          </a>
         </div>
       </div>
     </section>
