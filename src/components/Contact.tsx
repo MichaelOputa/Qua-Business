@@ -65,7 +65,7 @@ export default function Contact() {
                 <div className="space-y-5">
                   {[
                     { Icon: Mail, label: 'Email Us', value: 'industriesqua@gmail.com' },
-                    { Icon: MessageSquare, label: 'WhatsApp', value: '+234 701 979 1950' },
+                    { Icon: MessageSquare, label: 'WhatsApp', value: '+234 707 718 8112' },
                     { Icon: MapPin, label: 'Location', value: 'Nigeria' },
                   ].map(({ Icon, label, value }) => (
                     <div key={label} className="flex items-start gap-4">

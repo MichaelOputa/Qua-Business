@@ -102,7 +102,7 @@ export default function Footer() {
             <h4 className="text-white font-bold mb-5 text-sm uppercase tracking-widest">Contact Us</h4>
             <ul className="space-y-3 text-sm text-slate-400">
               <li>industriesqua@gmail.com</li>
-              <li>+234 701 979 1950</li>
+              <li>+234 707 718 8112</li>
               <li>Nigeria</li>
             </ul>
             <a

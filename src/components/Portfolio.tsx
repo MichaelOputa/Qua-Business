@@ -27,6 +27,18 @@ const projects = [
     accent: 'from-blue-600 to-cyan-500',
     link: 'https://buyoo-marketplace.vercel.app/',
   },
+  {
+    title: 'The Sivia NG',
+    category: 'eCommerce · Luxury Hair & Beauty',
+    year: '2026',
+    description:
+      'A luxury hair and wig eCommerce storefront with a curated product catalog, wig service bookings, and WhatsApp-driven customer engagement for a Uyo-based beauty brand.',
+    tech: ['React', 'TypeScript', 'Tailwind', 'WhatsApp API'],
+    image:
+      '/THE_SIVIA_NG.png',
+    accent: 'from-amber-600 to-yellow-500',
+    link: 'https://the-sivia-ng.vercel.app/',
+  },
 ];
 
 function TimelineItem({
