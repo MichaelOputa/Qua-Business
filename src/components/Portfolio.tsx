@@ -37,7 +37,7 @@ const projects = [
     image:
       '/THE_SIVIA_NG.png',
     accent: 'from-amber-600 to-yellow-500',
-    link: 'https://the-sivia-ng.vercel.app/',
+    link: 'http://thesiviang.shop/',
   },
 ];
 
